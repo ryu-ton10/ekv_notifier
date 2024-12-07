@@ -41,5 +41,17 @@ async function loadMembersFromSheet() {
   const sheet = await doc.sheetsById[process.env.DEV_WORKSHEET_ID];
   const rows = await sheet.getRows();
 
-  await console.log(rows)
+  // 現在の時刻の取得
+  const currentDate = new Date(Date.now());
+  const year = await currentDate.getFullYear();
+  // NOTE: Date から生成される月は 0 からのスタートであるため +1 している
+  const month = await String(Number(currentDate.getMonth()) + 1);
+  const date = await currentDate.getDate();
+
+  const currentDateString = `${year}${month}${date}`;
+
+  let row = rows.find((r) => r._rawData[0] === currentDateString);
+  // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
+  let participants = row._rawData.slice(1);
+  await console.log(participants)
 }
