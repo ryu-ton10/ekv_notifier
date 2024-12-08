@@ -26,10 +26,23 @@ client.on('ready', () => {
 });
 client.login(process.env.TOKEN);
 
-cron.schedule('* * * * *', function() {
+// 毎週水曜日の 18:00 に設定
+cron.schedule('0 18 * * 3', function() {
   loadMembersFromSheet().then(members => {
-    const message = yieldMessage(members);
-    sendMessage(message);
+    if (members.length !== 0) {
+      const message = yieldMessage(members);
+      sendMessage(message);
+    }
+  })
+})
+
+// 毎週土曜日の 18:00 に設定
+cron.schedule('0 18 * * 6', function() {
+  loadMembersFromSheet().then(members => {
+    if (members.length !== 0) {
+      const message = yieldMessage(members);
+      sendMessage(message);
+    }
   })
 })
 
@@ -63,6 +76,9 @@ async function loadMembersFromSheet() {
   const currentDateString = `${year}${month}${date}`;
 
   let row = rows.find((r) => r._rawData[0] === currentDateString);
+  if (!row) {
+    return [];
+  }
   // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
   let members = row._rawData.slice(1);
   return members
