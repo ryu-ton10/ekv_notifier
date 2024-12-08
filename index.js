@@ -63,7 +63,7 @@ async function loadMembersFromSheet() {
 
   const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID, serviceAccountAuth);
   await doc.loadInfo();
-  const sheet = await doc.sheetsById[process.env.DEV_WORKSHEET_ID];
+  const sheet = await doc.sheetsById[process.env.WORKSHEET_ID];
   const rows = await sheet.getRows();
 
   // 現在の時刻の取得
