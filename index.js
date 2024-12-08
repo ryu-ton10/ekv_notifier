@@ -2,6 +2,7 @@ require('dotenv').config()
 const { Client, GatewayIntentBits } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library')
+const cron = require('node-cron');
 
 const client = new Client(
   { intents: [
@@ -22,12 +23,15 @@ client.on('messageCreate', message => {
 
 client.on('ready', () => {
   console.log('ready to send');
+});
+client.login(process.env.TOKEN);
+
+cron.schedule('* * * * *', function() {
   loadMembersFromSheet().then(members => {
     const message = yieldMessage(members);
     sendMessage(message);
   })
-});
-client.login(process.env.TOKEN);
+})
 
 /**
  * loadMembersFromSheet
