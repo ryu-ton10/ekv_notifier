@@ -21,12 +21,20 @@ client.on('messageCreate', message => {
 });
 
 client.on('ready', () => {
-  console.log('ボットが起動したよ');
+  console.log('ready to send');
+  loadMembersFromSheet().then(members => {
+    const message = yieldMessage(members);
+    sendMessage(message);
+  })
 });
 client.login(process.env.TOKEN);
 
-loadMembersFromSheet();
-
+/**
+ * loadMembersFromSheet
+ * スプレッドシートから参加メンバーを取得する
+ *
+ * @return string[] 参加メンバーの一覧
+*/
 async function loadMembersFromSheet() {
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -52,6 +60,34 @@ async function loadMembersFromSheet() {
 
   let row = rows.find((r) => r._rawData[0] === currentDateString);
   // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
-  let participants = row._rawData.slice(1);
-  await console.log(participants)
+  let members = row._rawData.slice(1);
+  return members
+}
+
+/**
+ * yieldMessage
+ * 取得したメンバーを基にメッセージを生成する
+ *
+ * @param members string
+ * @return string 実際に送信するメッセージ内容
+ */
+function yieldMessage(members) {
+  let message = '';
+  // 各メンバーへのメンションメッセージを組み立てる
+  for (const member of members) {
+    message = message + '<@' + member + '> ';
+  }
+  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n配信枠がある方は #各視点配信枠 に URL を貼ってください！"
+  return message;
+}
+
+/**
+ * sendMessage
+ * 指定したチャンネルにメッセージを送信する
+ *
+ * @param message string
+ */
+function sendMessage(message) {
+  const channel = client.channels.cache.get(process.env.CHANNEL_ID);
+  channel.send(message);
 }
