@@ -97,7 +97,7 @@ function yieldMessage(members) {
   for (const member of members) {
     message = message + '<@' + member + '> ';
   }
-  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n配信枠がある方は #各視点配信枠 に URL を貼ってください！"
+  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！"
   return message;
 }
 
