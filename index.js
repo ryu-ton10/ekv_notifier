@@ -27,21 +27,25 @@ client.on('ready', () => {
 client.login(process.env.TOKEN);
 
 // 毎週水曜日の 10:00 に設定
-cron.schedule('0 10 * * 3', function() {
+cron.schedule('30 10 * * 3', function() {
+  console.log('start bot');
   loadMembersFromSheet().then(members => {
     if (members.length !== 0) {
       const message = yieldMessage(members);
       sendMessage(message);
+      console.log('sent a message');
     }
   })
 })
 
 // 毎週土曜日の 10:00 に設定
-cron.schedule('0 10 * * 6', function() {
+cron.schedule('30 10 * * 6', function() {
+  console.log('start bot');
   loadMembersFromSheet().then(members => {
     if (members.length !== 0) {
       const message = yieldMessage(members);
       sendMessage(message);
+      console.log('sent a message');
     }
   })
 })
