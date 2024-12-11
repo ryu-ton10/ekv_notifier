@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const { CronJob } = require('cron');
-const cronJob = require('cron').CronJob;
+const CronJob = require('cron').CronJob;
 
 const client = new Client(
   { intents: [
