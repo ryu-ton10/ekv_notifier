@@ -24,7 +24,11 @@ client.on('messageCreate', message => {
 client.on('ready', () => {
   console.log('ready to send');
   // 毎週水曜日の 11:00 に設定
-  cron.schedule('0 11 * * 3', function() {
+  cron.schedule({
+    cronTime: '40 11 * * 3',
+    start: true,
+    timeZone: 'Asia/Tokyo',
+  }, function() {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
       if (members.length !== 0) {
@@ -36,7 +40,11 @@ client.on('ready', () => {
   })
 
   // 毎週土曜日の 11:00 に設定
-  cron.schedule('0 11 * * 6', function() {
+  cron.schedule({
+    cronTime: '40 11 * * 6',
+    start: true,
+    timeZone: 'Asia/Tokyo',
+  }, function() {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
       if (members.length !== 0) {
