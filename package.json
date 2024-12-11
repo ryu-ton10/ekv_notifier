@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "cron": "^3.3.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
     "google-auth-library": "^9.15.0",

@@ -1,8 +1,9 @@
 require('dotenv').config()
 const { Client, GatewayIntentBits } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library')
-const cron = require('node-cron');
+const { JWT } = require('google-auth-library');
+const { CronJob } = require('cron');
+const cronJob = require('cron').CronJob;
 
 const client = new Client(
   { intents: [
@@ -13,47 +14,60 @@ const client = new Client(
   }
 );
 
-client.on('messageCreate', message => {
-  if(message.author.bot) return; //BOTのメッセージには反応しない
+const wedJob = new CronJob({
+  cronTime: '0 12 * * 3',
+  onTick: () => {
+    console.log('start bot');
+    loadMembersFromSheet().then(members => {
+      if (members.length !== 0) {
+        const message = yieldMessage(members);
+        sendMessage(message);
+        console.log('sent a message');
+      }
+    })
+  },
+  start: true,
+  timeZone: 'Asia/Tokyo',
+})
+const satJob = new CronJob({
+  cronTime: '0 12 * * 6',
+  onTick: () => {
+    console.log('start bot');
+    loadMembersFromSheet().then(members => {
+      if (members.length !== 0) {
+        const message = yieldMessage(members);
+        sendMessage(message);
+        console.log('sent a message');
+      }
+    })
+  },
+  start: true,
+  timeZone: 'Asia/Tokyo',
+})
 
-  if(message.content === "こんにちは") {
+client.on('messageCreate', message => {
+  if (message.author.bot) return; //BOTのメッセージには反応しない
+
+  if (message.content === "こんにちは") {
     message.channel.send("こんにちは！");
+  }
+  if (message.content === "stop bot") {
+    wedJob.stop();
+    satJob.stop();
+    message.channel.send("stopped cron jobs");
+  }
+  if (message.content === "restart bot") {
+    wedJob.start();
+    satJob.start();
+    message.channel.send("started cron jobs");
   }
 });
 
 client.on('ready', () => {
   console.log('ready to send');
-  // 毎週水曜日の 11:00 に設定
-  cron.schedule({
-    cronTime: '40 11 * * 3',
-    start: true,
-    timeZone: 'Asia/Tokyo',
-  }, function() {
-    console.log('start bot');
-    loadMembersFromSheet().then(members => {
-      if (members.length !== 0) {
-        const message = yieldMessage(members);
-        sendMessage(message);
-        console.log('sent a message');
-      }
-    })
-  })
-
-  // 毎週土曜日の 11:00 に設定
-  cron.schedule({
-    cronTime: '40 11 * * 6',
-    start: true,
-    timeZone: 'Asia/Tokyo',
-  }, function() {
-    console.log('start bot');
-    loadMembersFromSheet().then(members => {
-      if (members.length !== 0) {
-        const message = yieldMessage(members);
-        sendMessage(message);
-        console.log('sent a message');
-      }
-    })
-  })
+  wedJob.start();
+  satJob.start();
+  console.log('cron job start');
 });
 client.login(process.env.TOKEN);
 
