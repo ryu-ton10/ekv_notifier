@@ -26,8 +26,8 @@ client.on('ready', () => {
 });
 client.login(process.env.TOKEN);
 
-// 毎週水曜日の 18:00 に設定
-cron.schedule('0 18 * * 3', function() {
+// 毎週水曜日の 10:00 に設定
+cron.schedule('0 10 * * 3', function() {
   loadMembersFromSheet().then(members => {
     if (members.length !== 0) {
       const message = yieldMessage(members);
@@ -36,8 +36,8 @@ cron.schedule('0 18 * * 3', function() {
   })
 })
 
-// 毎週土曜日の 18:00 に設定
-cron.schedule('0 18 * * 6', function() {
+// 毎週土曜日の 10:00 に設定
+cron.schedule('0 10 * * 6', function() {
   loadMembersFromSheet().then(members => {
     if (members.length !== 0) {
       const message = yieldMessage(members);
