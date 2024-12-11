@@ -2,7 +2,6 @@ require('dotenv').config()
 const { Client, GatewayIntentBits } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
-const { CronJob } = require('cron');
 const CronJob = require('cron').CronJob;
 
 const client = new Client(
