@@ -13,8 +13,8 @@ const client = new Client(
   }
 );
 
-const wedJob = new CronJob({
-  cronTime: '0 12 * * 3',
+const wedJob = CronJob.from({
+  cronTime: '0 10 12 * * 3',
   onTick: () => {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
@@ -25,11 +25,14 @@ const wedJob = new CronJob({
       }
     })
   },
-  start: true,
+  onComplete: () => {
+    console.log('completed to send a message')
+  },
+  start: false,
   timeZone: 'Asia/Tokyo',
 })
-const satJob = new CronJob({
-  cronTime: '0 12 * * 6',
+const satJob = CronJob.from({
+  cronTime: '0 10 12 * * 6',
   onTick: () => {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
@@ -40,7 +43,10 @@ const satJob = new CronJob({
       }
     })
   },
-  start: true,
+  onComplete: () => {
+    console.log('completed to send a message')
+  },
+  start: false,
   timeZone: 'Asia/Tokyo',
 })
 
