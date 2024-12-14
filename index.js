@@ -35,7 +35,7 @@ const wedJob = CronJob.from({
   timeZone: 'Asia/Tokyo',
 })
 const satJob = CronJob.from({
-  cronTime: '0 10 16 * * 6',
+  cronTime: '0 0 16 * * 6',
   onTick: () => {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
@@ -54,17 +54,6 @@ const satJob = CronJob.from({
   },
   start: false,
   timeZone: 'Asia/Tokyo',
-})
-
-loadMembersFromSheet().then(members => {
-  if (members.length !== 0) {
-    let message = yieldNoticeMessage(members);
-    yieldMemberListMessage(members).then(m => {
-      message = message + "\n" + m;
-      sendMessage(message);
-      console.log('sent a message');
-    })
-  }
 })
 
 client.on('messageCreate', message => {
