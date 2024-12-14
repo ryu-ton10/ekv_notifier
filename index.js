@@ -154,7 +154,7 @@ async function yieldMemberListMessage(memberIds) {
   const memberMasterSheet = await doc.sheetsById[process.env.MEMBER_MASTER_WORKSHEET_ID];
   const memberRows = await memberMasterSheet.getRows();
 
-  let text = "";
+  let text = "以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------";
   for (const r of memberRows) {
     for (const m of memberIds) {
       if (r._rawData[1] === m) {
@@ -162,6 +162,7 @@ async function yieldMemberListMessage(memberIds) {
       }
     }
   }
+  text = "----------------------------------"
   return text;
 }
 
