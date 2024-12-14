@@ -14,12 +14,13 @@ const client = new Client(
 );
 
 const wedJob = CronJob.from({
-  cronTime: '0 10 12 * * 3',
+  cronTime: '0 0 12 * * 3',
   onTick: () => {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
       if (members.length !== 0) {
-        const message = yieldMessage(members);
+        let message = yieldNoticeMessage(members);
+        message = message + "\n" + yieldMemberListMessage(members);
         sendMessage(message);
         console.log('sent a message');
       }
@@ -32,12 +33,13 @@ const wedJob = CronJob.from({
   timeZone: 'Asia/Tokyo',
 })
 const satJob = CronJob.from({
-  cronTime: '0 10 12 * * 6',
+  cronTime: '0 0 16 * * 6',
   onTick: () => {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
       if (members.length !== 0) {
-        const message = yieldMessage(members);
+        let message = yieldNoticeMessage(members);
+        message = message + "\n" + yieldMemberListMessage(members);
         sendMessage(message);
         console.log('sent a message');
       }
@@ -93,7 +95,7 @@ async function loadMembersFromSheet() {
 
   const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID, serviceAccountAuth);
   await doc.loadInfo();
-  const sheet = await doc.sheetsById[process.env.WORKSHEET_ID];
+  const sheet = await doc.sheetsById[process.env.MEMBER_LIST_WORKSHEET_ID];
   const rows = await sheet.getRows();
 
   // 現在の時刻の取得
@@ -121,7 +123,7 @@ async function loadMembersFromSheet() {
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-function yieldMessage(members) {
+function yieldNoticeMessage(members) {
   let message = '';
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of members) {
@@ -129,6 +131,38 @@ function yieldMessage(members) {
   }
   message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！"
   return message;
+}
+
+/**
+ * yieldMemberListMessage
+ * 取得したメンバーを基に参加者の URL 一覧表を作成する
+ *
+ * @param members string
+ * @return string 実際に送信するメッセージ内容
+ */
+async function yieldMemberListMessage(memberIds) {
+  const serviceAccountAuth = new JWT({
+    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    key: process.env.GOOGLE_PRIVATE_KEY,
+    scopes: [
+      'https://www.googleapis.com/auth/spreadsheets',
+    ]
+  });
+
+  const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID, serviceAccountAuth);
+  await doc.loadInfo();
+  const memberMasterSheet = await doc.sheetsById[process.env.MEMBER_MASTER_WORKSHEET_ID];
+  const memberRows = await memberMasterSheet.getRows();
+
+  let text = "";
+  for (const r of memberRows) {
+    for (const m of memberIds) {
+      if (r._rawData[1] === m) {
+        text = text + "【" + r._rawData[0] + "】\n<" + r._rawData[2] + ">\n<" + r._rawData[3] + ">\n\n";
+      }
+    }
+  }
+  return text;
 }
 
 /**
