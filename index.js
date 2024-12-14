@@ -20,9 +20,11 @@ const wedJob = CronJob.from({
     loadMembersFromSheet().then(members => {
       if (members.length !== 0) {
         let message = yieldNoticeMessage(members);
-        message = message + "\n" + yieldMemberListMessage(members);
-        sendMessage(message);
-        console.log('sent a message');
+        yieldMemberListMessage(members).then(m => {
+          message = message + "\n" + m;
+          sendMessage(message);
+          console.log('sent a message');
+        })
       }
     })
   },
@@ -39,9 +41,11 @@ const satJob = CronJob.from({
     loadMembersFromSheet().then(members => {
       if (members.length !== 0) {
         let message = yieldNoticeMessage(members);
-        message = message + "\n" + yieldMemberListMessage(members);
-        sendMessage(message);
-        console.log('sent a message');
+        yieldMemberListMessage(members).then(m => {
+          message = message + "\n" + m;
+          sendMessage(message);
+          console.log('sent a message');
+        })
       }
     })
   },
@@ -50,6 +54,17 @@ const satJob = CronJob.from({
   },
   start: false,
   timeZone: 'Asia/Tokyo',
+})
+
+loadMembersFromSheet().then(members => {
+  if (members.length !== 0) {
+    let message = yieldNoticeMessage(members);
+    yieldMemberListMessage(members).then(m => {
+      message = message + "\n" + m;
+      sendMessage(message);
+      console.log('sent a message');
+    })
+  }
 })
 
 client.on('messageCreate', message => {
@@ -154,7 +169,7 @@ async function yieldMemberListMessage(memberIds) {
   const memberMasterSheet = await doc.sheetsById[process.env.MEMBER_MASTER_WORKSHEET_ID];
   const memberRows = await memberMasterSheet.getRows();
 
-  let text = "以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------";
+  let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n";
   for (const r of memberRows) {
     for (const m of memberIds) {
       if (r._rawData[1] === m) {
@@ -162,7 +177,7 @@ async function yieldMemberListMessage(memberIds) {
       }
     }
   }
-  text = "----------------------------------"
+  text = text + "----------------------------------"
   return text;
 }
 
