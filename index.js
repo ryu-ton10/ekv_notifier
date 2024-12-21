@@ -35,7 +35,7 @@ const wedJob = CronJob.from({
   timeZone: 'Asia/Tokyo',
 })
 const satJob = CronJob.from({
-  cronTime: '0 0 16 * * 6',
+  cronTime: '0 0 12 * * 6',
   onTick: () => {
     console.log('start bot');
     loadMembersFromSheet().then(members => {
