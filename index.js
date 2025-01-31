@@ -82,6 +82,9 @@ client.on('ready', () => {
 });
 client.login(process.env.TOKEN);
 
+// TODO: 以下の定数のスコープを狭める
+let ruleChannel = '';
+
 /**
  * loadMembersFromSheet
  * スプレッドシートから参加メンバーを取得する
@@ -116,7 +119,8 @@ async function loadMembersFromSheet() {
     return [];
   }
   // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
-  let members = row._rawData.slice(1);
+  let members = row._rawData.slice(2);
+  ruleChannel = row._rawData[1];
   return members
 }
 
@@ -133,7 +137,7 @@ function yieldNoticeMessage(members) {
   for (const member of members) {
     message = message + '<@' + member + '> ';
   }
-  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！"
+  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n本日のルールは <#" + ruleChannel + "> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！"
   return message;
 }
 
