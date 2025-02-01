@@ -10,7 +10,9 @@ module.exports = {
     .addStringOption(option =>
       option.setName('month')
         .setDescription('月')),
-  async execute(interaction, option) {
-    await interaction.reply(option)
+  async execute(interaction) {
+    const year = interaction.option.getString('year')
+    const month = interaction.option.getString('month')
+    await interaction.reply(`${year} ${month} の参加予定日は以下です。`)
   } 
 }
