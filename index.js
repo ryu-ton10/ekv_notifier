@@ -1,5 +1,7 @@
 require('dotenv').config()
-const { Client, GatewayIntentBits } = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const CronJob = require('cron').CronJob;
@@ -12,6 +14,26 @@ const client = new Client(
     ]
   }
 );
+
+client.commands = new Collection();
+
+const foldersPath = path.join(__dirname, 'commands')
+const commandFolders = fs.readdirSync(foldersPath)
+
+for (const folder of commandFolders) {
+  const commandsPath = path.jjoin(foldersPath, folder)
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
+
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file)
+    const command = require(filePath)
+    if ('data' in command && 'execute' in command) {
+      client.commands.set(command.data.name, command)
+    } else {
+      console.log('data もしくは execute がありません')
+    }
+  }
+}
 
 const wedJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
