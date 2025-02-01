@@ -8,7 +8,7 @@ const { JWT } = require('google-auth-library');
  *
  * @return string[] 参加メンバーの一覧
 */
-async function loadShiftFromSheet(userId, year, month) {
+export async function loadShiftFromSheet(userId, year, month) {
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,
