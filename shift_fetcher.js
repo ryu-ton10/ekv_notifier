@@ -30,11 +30,15 @@ async function getRows() {
 */
 function loadShiftFromSheet(rows, userId, year, month) {
   let filteredRows = rows.filter((r) => r._rawData[0] === year && r._rawData[1] === month);
+  console.log('=====')
+  console.log(filteredRows)
 
   let shiftDates = []
   if (filteredRows._rawData.includes(userId)) {
     shiftDates.push(filteredRows._rawData)
   }
+  console.log('=====')
+  console.log(shiftDates)
   if (shiftDates.length === 0) {
     return '指定した月の参加予定日は、ありません。'
   }
