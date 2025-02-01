@@ -4,11 +4,14 @@ const { JWT } = require('google-auth-library');
 
 /**
  * loadMembersFromSheet
- * スプレッドシートから参加メンバーを取得する
+ * スプレッドシートから自身の参加日を取得する
  *
- * @return string[] 参加メンバーの一覧
+ * @param userId string
+ * @param year number
+ * @param month number
+ * @return string 参加予定日を含めたメッセージ
 */
-export async function loadShiftFromSheet(userId, year, month) {
+async function loadShiftFromSheet(userId, year, month) {
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,
@@ -43,3 +46,5 @@ export async function loadShiftFromSheet(userId, year, month) {
   }
   return message
 }
+
+module.exports = { loadShiftFromSheet }
