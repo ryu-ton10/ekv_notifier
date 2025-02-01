@@ -2,16 +2,7 @@ require('dotenv').config()
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 
-/**
- * loadMembersFromSheet
- * スプレッドシートから自身の参加日を取得する
- *
- * @param userId string
- * @param year number
- * @param month number
- * @return string 参加予定日を含めたメッセージ
-*/
-async function loadShiftFromSheet(userId, year, month) {
+async function getRows() {
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,
@@ -24,8 +15,21 @@ async function loadShiftFromSheet(userId, year, month) {
   await doc.loadInfo();
   const sheet = await doc.sheetsById[process.env.MEMBER_LIST_WORKSHEET_ID];
   const rows = await sheet.getRows();
+  return rows
+}
 
-  let filteredRows = await rows.find((r) => {
+/**
+ * loadMembersFromSheet
+ * スプレッドシートから自身の参加日を取得する
+ *
+ * @param rows string[]
+ * @param userId string
+ * @param year number
+ * @param month number
+ * @return string 参加予定日を含めたメッセージ
+*/
+function loadShiftFromSheet(rows, userId, year, month) {
+  let filteredRows = rows.find((r) => {
     if (r._rawData[0] === year && r._rawData[1] === month) {
       return r
     }
@@ -34,7 +38,7 @@ async function loadShiftFromSheet(userId, year, month) {
   let shiftDates = []
   for (fr of filteredRows) {
     if (fr.some(userId)) {
-      await shiftDates.push(fr)
+      shiftDates.push(fr)
     }
   }
   if (shiftDates.length === 0) {
@@ -42,9 +46,9 @@ async function loadShiftFromSheet(userId, year, month) {
   }
   let message = ''
   for (dates of shiftDates) {
-    message = await message + `${shiftDates._rawData[0]}年${shiftDates._rawData[1]}月${shiftDates._rawData[2]}日\n`
+    message = message + `${shiftDates._rawData[0]}年${shiftDates._rawData[1]}月${shiftDates._rawData[2]}日\n`
   }
   return message
 }
 
-module.exports = { loadShiftFromSheet }
+module.exports = { getRows, loadShiftFromSheet }
