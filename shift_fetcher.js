@@ -30,13 +30,15 @@ async function getRows() {
 */
 function loadShiftFromSheet(rows, userId, year, month) {
   let filteredRows = rows.find((r) => r._rawData[0] === year && r._rawData[1] === month);
+  console.log('=====')
   console.log(filteredRows)
 
   let shiftDates = []
-  for (fr of filteredRows._rawData) {
+  for (fr of filteredRows) {
+  console.log('=====')
     console.log(fr)
     if (fr.some(userId)) {
-      shiftDates.push(fr._rawData)
+      shiftDates.push(fr)
     }
   }
   console.log(shiftDates)
@@ -47,6 +49,7 @@ function loadShiftFromSheet(rows, userId, year, month) {
   for (dates of shiftDates) {
     message = message + `${shiftDates._rawData[0]}年${shiftDates._rawData[1]}月${shiftDates._rawData[2]}日\n`
   }
+  console.log('=====')
   console.log(message)
   return message
 }
