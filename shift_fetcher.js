@@ -34,6 +34,7 @@ function loadShiftFromSheet(rows, userId, year, month) {
 
   let shiftDates = []
   for (fr of filteredRows._rawData) {
+    console.log(fr)
     if (fr.some(userId)) {
       shiftDates.push(fr._rawData)
     }
