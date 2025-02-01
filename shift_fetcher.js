@@ -29,11 +29,8 @@ async function getRows() {
  * @return string 参加予定日を含めたメッセージ
 */
 function loadShiftFromSheet(rows, userId, year, month) {
-  let filteredRows = rows.find((r) => {
-    if (r._rawData[0] === year && r._rawData[1] === month) {
-      return r
-    }
-  });
+  let filteredRows = rows.find((r) => r._rawData[0] === year && r._rawData[1] === month);
+  console.log(filteredRows)
 
   let shiftDates = []
   for (fr of filteredRows) {
