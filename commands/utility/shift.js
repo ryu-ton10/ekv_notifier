@@ -12,9 +12,9 @@ module.exports = {
       option.setName('month')
         .setDescription('月')),
   async execute(interaction) {
-    const year = interaction.options.getString('year')
-    const month = interaction.options.getString('month')
-    const message = getRows().then(rows => {
+    const year = await interaction.options.getString('year')
+    const month = await interaction.options.getString('month')
+    const message = await getRows().then(rows => {
       loadShiftFromSheet(rows, interaction.user.id, year, month)
     })
     await interaction.reply(`${interaction.user} さんの ${year}年${month}月の参加予定日は以下です。\n${message}`)
