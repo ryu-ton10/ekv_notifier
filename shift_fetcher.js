@@ -29,25 +29,20 @@ async function getRows() {
  * @return string 参加予定日を含めたメッセージ
 */
 function loadShiftFromSheet(rows, userId, year, month) {
-  let filteredRows = rows.find((r) => r._rawData[0] === year && r._rawData[1] === month);
-  console.log('=====')
-  console.log(filteredRows)
+  let filteredRows = rows.filter((r) => r._rawData[0] === year && r._rawData[1] === month);
 
   let shiftDates = []
   if (filteredRows._rawData.includes(userId)) {
     shiftDates.push(filteredRows._rawData)
   }
-  console.log('=====')
-  console.log(shiftDates)
   if (shiftDates.length === 0) {
     return '指定した月の参加予定日は、ありません。'
   }
-  let message = ''
+  let message = '====='
   for (dates of shiftDates) {
     message = message + `${dates[0]}年${dates[1]}月${dates[2]}日\n`
   }
-  console.log('=====')
-  console.log(message)
+  message = message + '====='
   return message
 }
 
