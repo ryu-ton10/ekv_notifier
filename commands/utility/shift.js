@@ -10,7 +10,8 @@ module.exports = {
         .setDescription('年'))
     .addStringOption(option =>
       option.setName('month')
-        .setDescription('月')),
+        .setDescription('月'))
+    .setDefaultMemberPermissions(PermissionFlagsBits.All),
   async execute(interaction) {
     const year = await interaction.options.getString('year')
     const month = await interaction.options.getString('month')
