@@ -34,13 +34,10 @@ function loadShiftFromSheet(rows, userId, year, month) {
   console.log(filteredRows)
 
   let shiftDates = []
-  for (fr of filteredRows) {
-  console.log('=====')
-    console.log(fr)
-    if (fr.some(userId)) {
-      shiftDates.push(fr)
-    }
+  if (filteredRows._rawData.some(userId)) {
+    shiftDates.push(filteredRows._rawData)
   }
+  console.log('=====')
   console.log(shiftDates)
   if (shiftDates.length === 0) {
     return '指定した月の参加予定日は、ありません。'
