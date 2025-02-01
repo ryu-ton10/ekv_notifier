@@ -14,9 +14,9 @@ module.exports = {
   async execute(interaction) {
     const year = await interaction.options.getString('year')
     const month = await interaction.options.getString('month')
-    const message = await getRows().then(rows => {
-      loadShiftFromSheet(rows, interaction.user.id, year, month)
+    await getRows().then(rows => {
+      message = loadShiftFromSheet(rows, interaction.user.id, year, month)
+      interaction.reply(`${interaction.user} さんの ${year}年${month}月の参加予定日は以下です。\n${message}`)
     })
-    await interaction.reply(`${interaction.user} さんの ${year}年${month}月の参加予定日は以下です。\n${message}`)
   } 
 }
