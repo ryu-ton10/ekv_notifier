@@ -25,7 +25,7 @@ async function loadShiftFromSheet(userId, year, month) {
   const sheet = await doc.sheetsById[process.env.MEMBER_LIST_WORKSHEET_ID];
   const rows = await sheet.getRows();
 
-  let filteredRows = rows.find((r) => {
+  let filteredRows = await rows.find((r) => {
     if (r._rawData[0] === year && r._rawData[1] === month) {
       return r
     }
@@ -34,7 +34,7 @@ async function loadShiftFromSheet(userId, year, month) {
   let shiftDates = []
   for (fr of filteredRows) {
     if (fr.some(userId)) {
-      shiftDates.push(fr)
+      await shiftDates.push(fr)
     }
   }
   if (shiftDates.length === 0) {
@@ -42,7 +42,7 @@ async function loadShiftFromSheet(userId, year, month) {
   }
   let message = ''
   for (dates of shiftDates) {
-    message = message + `${shiftDates._rawData[0]}年${shiftDates._rawData[1]}月${shiftDates._rawData[2]}日\n`
+    message = await message + `${shiftDates._rawData[0]}年${shiftDates._rawData[1]}月${shiftDates._rawData[2]}日\n`
   }
   return message
 }
