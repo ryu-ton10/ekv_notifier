@@ -11,8 +11,8 @@ module.exports = {
       option.setName('month')
         .setDescription('月')),
   async execute(interaction) {
-    const year = interaction.option.getString('year')
-    const month = interaction.option.getString('month')
+    const year = interaction.options.getString('year')
+    const month = interaction.options.getString('month')
     await interaction.reply(`${year} ${month} の参加予定日は以下です。`)
   } 
 }
