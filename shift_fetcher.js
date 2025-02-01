@@ -44,7 +44,7 @@ function loadShiftFromSheet(rows, userId, year, month) {
   }
   let message = ''
   for (dates of shiftDates) {
-    message = message + `${shiftDates._rawData[0]}年${shiftDates._rawData[1]}月${shiftDates._rawData[2]}日\n`
+    message = message + `${dates[0]}年${dates[1]}月${dates[2]}日\n`
   }
   console.log('=====')
   console.log(message)
