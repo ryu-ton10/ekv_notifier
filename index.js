@@ -157,13 +157,13 @@ async function loadMembersFromSheet() {
 
   const currentDateString = `${year}${month}${date}`;
 
-  let row = rows.find((r) => r._rawData[0] === currentDateString);
+  let row = rows.find((r) => r._rawData[3] === currentDateString);
   if (!row) {
     return [];
   }
   // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
-  let members = row._rawData.slice(2);
-  ruleChannel = row._rawData[1];
+  let members = row._rawData.slice(5);
+  ruleChannel = row._rawData[4];
   return members
 }
 
