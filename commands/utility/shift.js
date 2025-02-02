@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js')
-const { getRows, loadShiftFromSheet } = require('./../../shift_fetcher')
+const { getRows, loadShiftFromSheet } = require('./../../workers/shift_fetcher')
 
 module.exports = {
   data: new SlashCommandBuilder()
