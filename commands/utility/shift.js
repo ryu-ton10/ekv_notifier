@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js')
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js')
 const { getRows, loadShiftFromSheet } = require('./../../shift_fetcher')
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
     .addStringOption(option =>
       option.setName('month')
         .setDescription('月'))
-    .setDefaultMemberPermissions(1<<6),
+    .setDefaultMemberPermissions(PermissionFlagsBits.UseApplicationCommands),
   async execute(interaction) {
     const year = await interaction.options.getString('year')
     const month = await interaction.options.getString('month')
