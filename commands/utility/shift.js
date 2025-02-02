@@ -11,7 +11,7 @@ module.exports = {
     .addStringOption(option =>
       option.setName('month')
         .setDescription('月'))
-    .setDefaultMemberPermissions(process.env.GUILD_ID),
+    .setDefaultMemberPermissions(interaction.guild.id),
   async execute(interaction) {
     const year = await interaction.options.getString('year')
     const month = await interaction.options.getString('month')
