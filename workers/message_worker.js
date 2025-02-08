@@ -61,7 +61,7 @@ async function yieldMemberListMessage(memberIds) {
  *
  * @param message string
  */
-function sendMessage(message) {
+function sendMessage(message, client) {
   const channel = client.channels.cache.get(process.env.CHANNEL_ID);
   channel.send(message);
 }
