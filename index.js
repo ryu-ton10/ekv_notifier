@@ -86,7 +86,7 @@ const satJob = CronJob.from({
         let message = yieldNoticeMessage(members);
         yieldMemberListMessage(members).then(m => {
           message = message + "\n" + m;
-          sendMessage(message);
+          sendMessage(message, client);
           console.log('sent a message');
         })
       }
