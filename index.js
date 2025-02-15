@@ -60,15 +60,18 @@ const wedJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
   onTick: () => {
     console.log('start bot');
-    loadMembersFromSheet().then(members => {
-      if (members.length !== 0) {
-        let message = yieldNoticeMessage(members);
-        yieldMemberListMessage(members).then(m => {
-          message = message + "\n" + m;
-          sendMessage(message, client);
-          console.log('sent a message');
-        })
+    loadMembersFromSheet().then(membersAndRule => {
+      const members = membersAndRule.members;
+      const rule = membersAndRule.rule;
+      if (members.length === 0) {
+        return;
       }
+      let message = yieldNoticeMessage(members);
+      yieldMemberListMessage(members, rule).then(m => {
+        message = message + "\n" + m;
+        sendMessage(message, client);
+        console.log('sent a message');
+      })
     })
   },
   onComplete: () => {
@@ -81,15 +84,18 @@ const satJob = CronJob.from({
   cronTime: '0 0 12 * * 6',
   onTick: () => {
     console.log('start bot');
-    loadMembersFromSheet().then(members => {
-      if (members.length !== 0) {
-        let message = yieldNoticeMessage(members);
-        yieldMemberListMessage(members).then(m => {
-          message = message + "\n" + m;
-          sendMessage(message, client);
-          console.log('sent a message');
-        })
+    loadMembersFromSheet().then(membersAndRule => {
+      const members = membersAndRule.members;
+      const rule = membersAndRule.rule;
+      if (members.length === 0) {
+        return;
       }
+      let message = yieldNoticeMessage(members);
+      yieldMemberListMessage(members, rule).then(m => {
+        message = message + "\n" + m;
+        sendMessage(message, client);
+        console.log('sent a message');
+      })
     })
   },
   onComplete: () => {
@@ -108,15 +114,18 @@ client.on('messageCreate', message => {
     message.channel.send("stopped cron jobs");
   }
   if (message.content === "send now") {
-    loadMembersFromSheet().then(members => {
-      if (members.length !== 0) {
-        let message = yieldNoticeMessage(members);
-        yieldMemberListMessage(members).then(m => {
-          message = message + "\n" + m;
-          sendMessage(message, client);
-          console.log('sent a message');
-        })
+    loadMembersFromSheet().then(membersAndRule => {
+      const members = membersAndRule.members;
+      const rule = membersAndRule.rule;
+      if (members.length === 0) {
+        return;
       }
+      let message = yieldNoticeMessage(members);
+      yieldMemberListMessage(members, rule).then(m => {
+        message = message + "\n" + m;
+        sendMessage(message, client);
+        console.log('sent a message');
+      })
     })
   }
   if (message.content === "restart bot") {

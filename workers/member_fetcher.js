@@ -38,7 +38,7 @@ async function loadMembersFromSheet() {
   // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
   let members = row._rawData.slice(5);
   ruleChannel = row._rawData[4];
-  return members
+  return {members, ruleChannel}
 }
 
 module.exports = { loadMembersFromSheet }
