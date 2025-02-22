@@ -12,7 +12,7 @@ let ruleChannel = '';
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-function yieldNoticeMessage(members) {
+function yieldNoticeMessage(members, ruleChannel) {
   let message = '';
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of members) {
