@@ -66,8 +66,8 @@ const wedJob = CronJob.from({
       if (members.length === 0) {
         return;
       }
-      let message = yieldNoticeMessage(members);
-      yieldMemberListMessage(members, rule).then(m => {
+      let message = yieldNoticeMessage(members, rule);
+      yieldMemberListMessage(members).then(m => {
         message = message + "\n" + m;
         sendMessage(message, client);
         console.log('sent a message');
@@ -90,8 +90,8 @@ const satJob = CronJob.from({
       if (members.length === 0) {
         return;
       }
-      let message = yieldNoticeMessage(members);
-      yieldMemberListMessage(members, rule).then(m => {
+      let message = yieldNoticeMessage(members, rule);
+      yieldMemberListMessage(members).then(m => {
         message = message + "\n" + m;
         sendMessage(message, client);
         console.log('sent a message');
@@ -120,8 +120,8 @@ client.on('messageCreate', message => {
       if (members.length === 0) {
         return;
       }
-      let message = yieldNoticeMessage(members);
-      yieldMemberListMessage(members, rule).then(m => {
+      let message = yieldNoticeMessage(members, rule);
+      yieldMemberListMessage(members).then(m => {
         message = message + "\n" + m;
         sendMessage(message, client);
         console.log('sent a message');
