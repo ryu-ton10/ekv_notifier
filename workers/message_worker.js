@@ -2,9 +2,6 @@ require('dotenv').config()
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { JWT } = require('google-auth-library')
 
-// TODO: 以下の定数のスコープを狭める
-let ruleChannel = '';
-
 /**
  * yieldMessage
  * 取得したメンバーを基にメッセージを生成する
@@ -12,13 +9,13 @@ let ruleChannel = '';
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-function yieldNoticeMessage(members, ruleChannel) {
+function yieldNoticeMessage(members, rule) {
   let message = '';
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of members) {
     message = message + '<@' + member + '> ';
   }
-  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n本日のルールは <#" + ruleChannel + "> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！"
+  message = message + "\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n本日のルールは <#" + rule + "> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！"
   return message;
 }
 
