@@ -16,7 +16,7 @@ module.exports = {
     const month = await interaction.options.getString('month')
     await getRows().then(rows => {
       if (!year || !month) {
-        interaction.reply(`${interaction.user}\n${message}\n年月を指定した上で、再度コマンドを実行してください。`)
+        interaction.reply(`${interaction.user}\n年月を指定した上で、再度コマンドを実行してください。`)
         return
       }
       message = loadShiftFromSheet(rows, interaction.user.id, year, month)
