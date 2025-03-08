@@ -15,6 +15,10 @@ module.exports = {
     const year = await interaction.options.getString('year')
     const month = await interaction.options.getString('month')
     await getRows().then(rows => {
+      if (!year || !month) {
+        interaction.reply(`${interaction.user}\n${message}\n年月を指定した上で、再度コマンドを実行してください。`)
+        return
+      }
       message = loadShiftFromSheet(rows, interaction.user.id, year, month)
       interaction.reply(`${interaction.user} さんの ${year}年${month}月の参加予定日は以下です。\n${message}\n※突発的な変動や調整がありますので、必ず <#1131285823757758475> をご確認ください！`)
     })
