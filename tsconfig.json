@@ -5,7 +5,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": ".",
+    "allowJs": true,
     "removeComments": true,
     "noEmitOnError": true,
 
