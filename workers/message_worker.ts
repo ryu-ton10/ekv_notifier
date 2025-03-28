@@ -1,6 +1,6 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { JWT } from 'google-auth-library'
-import type { Client, TextChannel } from 'discord.js';
+import type { BaseGuildTextChannel, Client, TextChannel } from 'discord.js';
 import type { MembersAndRule } from './member_fetcher';
 import 'dotenv/config'
 
@@ -65,7 +65,7 @@ export async function yieldMemberListMessage(members: string[]) {
  */
 export function sendMessage(message: string, client: Client) {
   const channelId = process.env.CHANNEL_ID ?? ''
-  const channel = client.channels.cache.get(channelId) as TextChannel;
+  const channel = client.channels.cache.get(channelId) as BaseGuildTextChannel;
   if (!channel) return
   channel.send(message);
 }
