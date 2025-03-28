@@ -1,10 +1,14 @@
+import { Collection } from "discord.js";
+import type { CommandInteraction, Message } from "discord.js";
+import { loadMembersFromSheet } from "./workers/member_fetcher"
+import type { MembersAndRule } from "./workers/member_fetcher"
+import { yieldNoticeMessage, yieldMemberListMessage, sendMessage } from "./workers/message_worker";
+
 require('dotenv').config()
 const fs = require('node:fs')
 const path = require('node:path')
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
+const { Client, Events, GatewayIntentBits, MessageFlags } = require('discord.js')
 const CronJob = require('cron').CronJob
-const { loadMembersFromSheet } = require('./workers/member_fetcher.js')
-const { yieldNoticeMessage, yieldMemberListMessage, sendMessage } = require('./workers/message_worker.js')
 
 const client = new Client(
   { intents: [
@@ -22,7 +26,7 @@ const commandFolders = fs.readdirSync(foldersPath)
 
 for (const folder of commandFolders) {
   const commandsPath = path.join(foldersPath, folder)
-  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
+  const commandFiles = fs.readdirSync(commandsPath).filter((file: string) => file.endsWith('.js'))
 
   for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file)
@@ -35,9 +39,9 @@ for (const folder of commandFolders) {
   }
 }
 
-client.on(Events.InteractionCreate, async interaction => {
+client.on(Events.InteractionCreate, async (interaction: CommandInteraction) => {
   if (!interaction.isChatInputCommand()) return;
-  const command = interaction.client.commands.get(interaction.commandName)
+  const command = client.commands.get(interaction.commandName)
 
   if (!command) {
     console.error(`${interaction.commandName} は見つかりませんでした`)
@@ -57,15 +61,13 @@ client.on(Events.InteractionCreate, async interaction => {
 })
 
 const execute = () => {
-  loadMembersFromSheet().then(membersAndRule => {
-    const members = membersAndRule.members;
-    const rule = membersAndRule.rule;
-    if (members.length === 0) {
+  loadMembersFromSheet().then((membersAndRule: MembersAndRule) => {
+    if (membersAndRule.members.length === 0) {
       return;
     }
-    let message = yieldNoticeMessage(members, rule);
-    yieldMemberListMessage(members).then(m => {
-      message = message + "\n" + m;
+    let message = yieldNoticeMessage(membersAndRule);
+    yieldMemberListMessage(membersAndRule.members).then((m: string) => {
+      message = `${message}\n${m}`;
       sendMessage(message, client);
       console.log('sent a message');
     })
@@ -97,13 +99,13 @@ const satJob = CronJob.from({
   timeZone: 'Asia/Tokyo',
 })
 
-client.on('messageCreate', message => {
+client.on('messageCreate', (message: Message) => {
   if (message.author.bot) return; //BOTのメッセージには反応しない
 
   if (message.content === "stop bot") {
     wedJob.stop();
     satJob.stop();
-    message.channel.send("stopped cron jobs");
+    client.send("stopped cron jobs");
   }
   if (message.content === "send now") {
     execute();
@@ -111,7 +113,7 @@ client.on('messageCreate', message => {
   if (message.content === "restart bot") {
     wedJob.start();
     satJob.start();
-    message.channel.send("started cron jobs");
+    client.send("started cron jobs");
   }
 });
 
