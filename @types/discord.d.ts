@@ -6,7 +6,7 @@ declare module "discord.js" {
 		commands: Collection<
 			string,
 			{
-        interaction: (interaction: CommandInteraction) => Promise<void>,
+        interaction: (interaction: ChatInputCommandInteraction) => Promise<void>,
         execute(interaction: CommandInteraction): () => void,
       }
 		>;

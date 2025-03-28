@@ -33,8 +33,8 @@ for (const folder of commandFolders) {
     (async () => {
       const command = await import(filePath)
       // TODO: shift プロパティを挟まないとコマンドの詳細が取得できない原因を調査する
-      if (command.shift.data && command.shift.execute) {
-        client.commands.set(command.shift.data.name, command)
+      if (command.data && command.execute) {
+        client.commands.set(command.data.name, command)
       } else {
         console.log('data もしくは execute がありません')
       }
@@ -46,6 +46,7 @@ for (const folder of commandFolders) {
 client.on(Events.InteractionCreate, async (interaction: any) => {
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName)
+  console.log(command)
 
   if (!command) {
     console.error(`${interaction.commandName} は見つかりませんでした`)
@@ -55,7 +56,6 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
   try {
     await command.execute(interaction)
   } catch (error) {
-    console.error(error)
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral })
     } else {
