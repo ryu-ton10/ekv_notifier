@@ -1,6 +1,12 @@
 require('dotenv').config()
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
+import { GoogleSpreadsheet } from "google-spreadsheet";
+import type { GoogleSpreadsheetRow } from "google-spreadsheet";
+import { JWT } from 'google-auth-library'
+
+export type MembersAndRule = {
+  members: string[];
+  rule: string;
+}
 
 /**
  * loadMembersFromSheet
@@ -8,7 +14,11 @@ const { JWT } = require('google-auth-library');
  *
  * @return string[] 参加メンバーの一覧
 */
-async function loadMembersFromSheet() {
+export async function loadMembersFromSheet(): Promise<MembersAndRule> {
+  const result = {
+    members: [] as string[],
+    rule: ''
+  }
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,
@@ -17,9 +27,11 @@ async function loadMembersFromSheet() {
     ]
   });
 
-  const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID, serviceAccountAuth);
+  const sheetId: string = process.env.SPREADSHEET_ID ?? ''
+  const worksheetId: string = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
+  const doc = new GoogleSpreadsheet(sheetId, serviceAccountAuth);
   await doc.loadInfo();
-  const sheet = await doc.sheetsById[process.env.MEMBER_LIST_WORKSHEET_ID];
+  const sheet = await doc.sheetsById[Number(worksheetId)];
   const rows = await sheet.getRows();
 
   // 現在の時刻の取得
@@ -31,14 +43,14 @@ async function loadMembersFromSheet() {
 
   const currentDateString = `${year}${month}${date}`;
 
-  let row = rows.find((r) => r._rawData[3] === currentDateString);
+  const row = rows.find((r: GoogleSpreadsheetRow) => r.get('date') === currentDateString);
   if (!row) {
-    return [];
+    return result;
   }
   // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
-  const members = row._rawData.slice(5);
-  const rule = row._rawData[4];
-  return {members, rule}
+  for ( let i = 0; i < 12; i++ ) {
+    result.members.push(row.get(String(i)))
+  }
+  result.rule = row.get('rule');
+  return result
 }
-
-module.exports = { loadMembersFromSheet }

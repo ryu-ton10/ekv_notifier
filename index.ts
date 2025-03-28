@@ -1,13 +1,14 @@
 import { Collection } from "discord.js";
 import type { CommandInteraction, Message } from "discord.js";
+import { loadMembersFromSheet } from "./workers/member_fetcher"
+import type { MembersAndRule } from "./workers/member_fetcher"
 
 require('dotenv').config()
 const fs = require('node:fs')
 const path = require('node:path')
 const { Client, Events, GatewayIntentBits, MessageFlags } = require('discord.js')
 const CronJob = require('cron').CronJob
-const { loadMembersFromSheet } = require('./workers/member_fetcher.js')
-const { yieldNoticeMessage, yieldMemberListMessage, sendMessage } = require('./workers/message_worker.js')
+const { yieldNoticeMessage, yieldMemberListMessage } = require('./workers/message_worker.js')
 
 const client = new Client(
   { intents: [
@@ -59,11 +60,6 @@ client.on(Events.InteractionCreate, async (interaction: CommandInteraction) => {
   }
 })
 
-type MembersAndRule = {
-  members: string[];
-  rule: string;
-}
-
 const execute = () => {
   loadMembersFromSheet().then((membersAndRule: MembersAndRule) => {
     const members = membersAndRule.members;
@@ -74,7 +70,7 @@ const execute = () => {
     let message = yieldNoticeMessage(members, rule);
     yieldMemberListMessage(members).then((m: string) => {
       message = `${message}\n${m}`;
-      sendMessage(message, client);
+      //sendMessage(message, client);
       console.log('sent a message');
     })
   })
