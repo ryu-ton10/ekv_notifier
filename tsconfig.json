@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "es2015",
-    "module": "es2015",
+    "target": "es2022",
+    "module": "es2022",
     "sourceMap": true,
+    "baseUrl": "./",
     "outDir": "./dist",
     "allowJs": true,
     "removeComments": true,
@@ -26,8 +27,14 @@
     /* Advanced Options */
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["@types", "node_modules/@types"],
+    "typeRoots": ["./@types", "node_modules/@types"],
 
     "moduleResolution": "node"
+  },
+  "ts-node": {
+    "esm": true,
+    "files": true,
+    "require": ["tsconfig-paths/register"],
+    "experimentalSpecifierResolution": "node"
   }
 }

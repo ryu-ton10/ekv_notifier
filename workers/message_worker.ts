@@ -1,8 +1,8 @@
-require('dotenv').config()
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { JWT } from 'google-auth-library'
 import type { Client, TextChannel } from 'discord.js';
 import type { MembersAndRule } from './member_fetcher';
+import 'dotenv/config'
 
 /**
  * yieldMessage

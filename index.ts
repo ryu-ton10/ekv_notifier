@@ -1,14 +1,13 @@
-import { Collection } from "discord.js";
-import type { CommandInteraction, Message } from "discord.js";
 import { loadMembersFromSheet } from "./workers/member_fetcher"
 import type { MembersAndRule } from "./workers/member_fetcher"
 import { yieldNoticeMessage, yieldMemberListMessage, sendMessage } from "./workers/message_worker";
-
-require('dotenv').config()
-const fs = require('node:fs')
-const path = require('node:path')
-const { Client, Events, GatewayIntentBits, MessageFlags } = require('discord.js')
-const CronJob = require('cron').CronJob
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import { fileURLToPath } from 'node:url';
+import type { CommandInteraction } from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
+import { CronJob } from 'cron'
+import 'dotenv/config'
 
 const client = new Client(
   { intents: [
@@ -18,28 +17,33 @@ const client = new Client(
     ]
   }
 );
+client.commands = new Collection<string, { interaction: (interaction: CommandInteraction) => Promise<void>; execute(interaction: CommandInteraction): void; }>();
 
-client.commands = new Collection();
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, 'commands')
 const commandFolders = fs.readdirSync(foldersPath)
 
 for (const folder of commandFolders) {
   const commandsPath = path.join(foldersPath, folder)
-  const commandFiles = fs.readdirSync(commandsPath).filter((file: string) => file.endsWith('.js'))
+  const commandFiles = fs.readdirSync(commandsPath).filter((file: string) => file.endsWith('.ts'))
 
   for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file)
-    const command = require(filePath)
-    if ('data' in command && 'execute' in command) {
-      client.commands.set(command.data.name, command)
-    } else {
-      console.log('data もしくは execute がありません')
-    }
+    const filePath = path.join(commandsPath, file);
+    (async () => {
+      const command = await import(filePath)
+      // TODO: shift プロパティを挟まないとコマンドの詳細が取得できない原因を調査する
+      if (command.shift.data && command.shift.execute) {
+        client.commands.set(command.shift.data.name, command)
+      } else {
+        console.log('data もしくは execute がありません')
+      }
+    })()
   }
 }
 
-client.on(Events.InteractionCreate, async (interaction: CommandInteraction) => {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+client.on(Events.InteractionCreate, async (interaction: any) => {
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName)
 
@@ -74,6 +78,7 @@ const execute = () => {
   })
 }
 
+execute()
 const wedJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
   onTick: () => {
@@ -99,7 +104,8 @@ const satJob = CronJob.from({
   timeZone: 'Asia/Tokyo',
 })
 
-client.on('messageCreate', (message: Message) => {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+client.on('messageCreate', (message: any) => {
   if (message.author.bot) return; //BOTのメッセージには反応しない
 
   if (message.content === "stop bot") {

@@ -16,6 +16,7 @@
     "google-spreadsheet": "^4.1.4",
     "node-cron": "^3.0.3",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2"
   }
 }

@@ -1,7 +1,7 @@
-require('dotenv').config()
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import type { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { JWT } from 'google-auth-library';
+import 'dotenv/config'
 
 export async function getRows() {
   const serviceAccountAuth = new JWT({

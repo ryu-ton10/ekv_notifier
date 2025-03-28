@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { getRows, loadShiftFromSheet } from './../../workers/shift_fetcher'
 import type { CommandInteraction, CommandInteractionOptionResolver } from "discord.js";
 
-module.exports = {
+export const shift = {
   data: new SlashCommandBuilder()
     .setName('shift')
     .setDescription('参加予定日をお知らせします')
