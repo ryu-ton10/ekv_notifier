@@ -36,5 +36,6 @@
     "files": true,
     "require": ["tsconfig-paths/register"],
     "experimentalSpecifierResolution": "node"
-  }
+  },
+  "include": ["/**/*.ts"],
 }

@@ -78,7 +78,6 @@ const execute = () => {
   })
 }
 
-execute()
 const wedJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
   onTick: () => {
