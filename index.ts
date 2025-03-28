@@ -2,13 +2,13 @@ import { Collection } from "discord.js";
 import type { CommandInteraction, Message } from "discord.js";
 import { loadMembersFromSheet } from "./workers/member_fetcher"
 import type { MembersAndRule } from "./workers/member_fetcher"
+import { yieldNoticeMessage, yieldMemberListMessage, sendMessage } from "./workers/message_worker";
 
 require('dotenv').config()
 const fs = require('node:fs')
 const path = require('node:path')
 const { Client, Events, GatewayIntentBits, MessageFlags } = require('discord.js')
 const CronJob = require('cron').CronJob
-const { yieldNoticeMessage, yieldMemberListMessage } = require('./workers/message_worker.js')
 
 const client = new Client(
   { intents: [
@@ -62,15 +62,13 @@ client.on(Events.InteractionCreate, async (interaction: CommandInteraction) => {
 
 const execute = () => {
   loadMembersFromSheet().then((membersAndRule: MembersAndRule) => {
-    const members = membersAndRule.members;
-    const rule = membersAndRule.rule;
-    if (members.length === 0) {
+    if (membersAndRule.members.length === 0) {
       return;
     }
-    let message = yieldNoticeMessage(members, rule);
-    yieldMemberListMessage(members).then((m: string) => {
+    let message = yieldNoticeMessage(membersAndRule);
+    yieldMemberListMessage(membersAndRule.members).then((m: string) => {
       message = `${message}\n${m}`;
-      //sendMessage(message, client);
+      sendMessage(message, client);
       console.log('sent a message');
     })
   })
