@@ -46,7 +46,6 @@ for (const folder of commandFolders) {
 client.on(Events.InteractionCreate, async (interaction: any) => {
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName)
-  console.log(command)
 
   if (!command) {
     console.error(`${interaction.commandName} は見つかりませんでした`)
