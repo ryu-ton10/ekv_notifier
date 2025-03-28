@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "deploy-commands": "node deploy-commands.js"
+    "deploy-commands": "ts-node deploy-commands.ts"
   },
   "dependencies": {
     "@types/node": "^22.13.13",
