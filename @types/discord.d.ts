@@ -7,10 +7,10 @@ declare module "discord.js" {
 			string,
 			{
         interaction: (interaction: CommandInteraction) => Promise<void>,
-        execute(interaction: CommandInteraction): void,
+        execute(interaction: CommandInteraction): () => void,
       }
 		>;
     message: Collection<Message>,
-    send(string: string): void
+    send(string: string): () => void
 	}
 }
