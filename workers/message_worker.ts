@@ -1,6 +1,6 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { JWT } from 'google-auth-library'
-import type { BaseGuildTextChannel, Client, TextChannel } from 'discord.js';
+import type { BaseGuildTextChannel, Client } from 'discord.js';
 import type { MembersAndRule } from './member_fetcher';
 import 'dotenv/config'
 
