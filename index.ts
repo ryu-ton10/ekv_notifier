@@ -32,7 +32,6 @@ for (const folder of commandFolders) {
     const filePath = path.join(commandsPath, file);
     (async () => {
       const command = await import(filePath)
-      // TODO: shift プロパティを挟まないとコマンドの詳細が取得できない原因を調査する
       if (command.data && command.execute) {
         client.commands.set(command.data.name, command)
       } else {

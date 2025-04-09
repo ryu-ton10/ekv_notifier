@@ -3,7 +3,12 @@ import type { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { JWT } from 'google-auth-library';
 import 'dotenv/config'
 
-export async function getRows() {
+/**
+ * シートから全ての列情報を取得する
+ *
+ * @returns GoogleSpreadsheetRow[]
+ */
+export async function getRows(): Promise<GoogleSpreadsheetRow[]> {
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,

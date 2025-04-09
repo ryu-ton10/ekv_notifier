@@ -19,9 +19,8 @@ for (const folder of commandFolders) {
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
     const command = await import(filePath)
-    // TODO: shift プロパティを挟まないとコマンドの詳細が取得できない原因を調査する
-    if (command.shift.data && command.shift.execute) {
-				commands.push(command.shift.data.toJSON());
+    if (command.data && command.execute) {
+				commands.push(command.data.toJSON());
     } else {
       console.log('data もしくは execute がありません')
     }
