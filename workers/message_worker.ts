@@ -11,7 +11,7 @@ import 'dotenv/config'
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-export function yieldNoticeMessage(membersAndRule: MembersAndRule) {
+export function yieldNoticeMessage(membersAndRule: MembersAndRule): string {
   let message = '';
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of membersAndRule.members) {
@@ -28,7 +28,7 @@ export function yieldNoticeMessage(membersAndRule: MembersAndRule) {
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-export async function yieldMemberListMessage(members: string[]) {
+export async function yieldMemberListMessage(members: string[]): Promise<string> {
   const sheetId = process.env.SPREADSHEET_ID ?? ''
   const worksheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
   const serviceAccountAuth = new JWT({

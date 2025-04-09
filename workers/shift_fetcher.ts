@@ -36,7 +36,7 @@ export async function getRows(): Promise<GoogleSpreadsheetRow[]> {
  * @param month string
  * @return string 参加予定日を含めたメッセージ
 */
-export function loadShiftFromSheet(rows: GoogleSpreadsheetRow[], userId: string, year: string, month: string) {
+export function loadShiftFromSheet(rows: GoogleSpreadsheetRow[], userId: string, year: string, month: string): string {
   const filteredRows = rows.filter((r) => r.get('year') === year && r.get('month') === month);
 
   const shiftDates = []
