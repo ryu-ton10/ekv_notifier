@@ -1,4 +1,3 @@
-import { Client } from "discord.js";
 import type { Collection, Message } from "discord.js";
 
 declare module "discord.js" {
