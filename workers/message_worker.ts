@@ -25,7 +25,7 @@ export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promis
     message = `${message}<@${member}> `;
   }
   const gm = await fetchGameMaster();
-  message = `${message}\n<@${gm.discordId}>`
+  message = `${message}<@${gm.discordId}>`
 
   message = `${message}\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！`
   return message;
