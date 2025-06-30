@@ -8,6 +8,7 @@ declare module 'process' {
 				readonly SPREADSHEET_ID?: string;
 				readonly MEMBER_LIST_WORKSHEET_ID?: number;
 				readonly MEMBER_MASTER_WORKSHEET_ID?: number;
+				readonly GAME_MASTER_WORKSHEET_ID?: number;
 				readonly CHANNEL_ID?: string;
 				readonly CLIENT_ID?: number;
 				readonly GUILD_ID?: number;

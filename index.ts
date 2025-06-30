@@ -63,14 +63,14 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
 })
 
 const execute = () => {
-  loadMembersFromSheet().then((membersAndRule: MembersAndRule) => {
+  loadMembersFromSheet().then(async (membersAndRule: MembersAndRule) => {
     if (membersAndRule.members.length === 0) {
       return;
     }
-    let message = yieldNoticeMessage(membersAndRule);
-    yieldMemberListMessage(membersAndRule.members).then((m: string) => {
-      message = `${message}\n${m}`;
-      sendMessage(message, client);
+    let message = await yieldNoticeMessage(membersAndRule);
+    yieldMemberListMessage(membersAndRule.members).then(async (m: string) => {
+      message = await `${message}\n${m}`;
+      sendMessage(await message, client);
       console.log('sent a message');
     })
   })
