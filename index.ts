@@ -70,8 +70,11 @@ const execute = () => {
     let message = await yieldNoticeMessage(membersAndRule);
     yieldMemberListMessage(membersAndRule.members).then(async (m: string) => {
       message = await `${message}\n${m}`;
-      sendMessage(await message, client);
-      console.log('sent a message');
+      // デプロイ先の本番環境でのみメッセージが送信される仕組み
+      if (!process.env.IS_LOCAL) {
+        sendMessage(await message, client);
+        console.log('sent a message');
+      }
     })
   })
 }
