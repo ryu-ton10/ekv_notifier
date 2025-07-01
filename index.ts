@@ -71,10 +71,12 @@ const execute = () => {
     yieldMemberListMessage(membersAndRule.members).then(async (m: string) => {
       message = await `${message}\n${m}`;
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
-      if (!process.env.IS_LOCAL) {
+      // TODO: 環境変数を boolean 型にする
+      if (process.env.IS_PRODUCTION === 'true') {
         sendMessage(await message, client);
         console.log('sent a message');
       }
+      console.log('finished all process');
     })
   })
 }

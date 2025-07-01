@@ -12,7 +12,7 @@ declare module 'process' {
 				readonly CHANNEL_ID?: string;
 				readonly CLIENT_ID?: number;
 				readonly GUILD_ID?: number;
-				readonly IS_LOCAL?: boolean;
+				readonly IS_PRODUCTION?: string;
 			}
 		}
 	}
