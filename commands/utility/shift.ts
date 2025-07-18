@@ -1,7 +1,7 @@
 import { loadShiftFromSheet } from './../../workers/shift_fetcher'
 import { SlashCommandBuilder } from 'discord.js'
 import type { ChatInputCommandInteraction } from "discord.js";
-import { fetchRowsFromSheet } from 'workers/spreadsheet_worker';
+import { fetchRowsFromSheet } from './../../workers/spreadsheet_worker';
 
 export const data = new SlashCommandBuilder()
   .setName('shift')

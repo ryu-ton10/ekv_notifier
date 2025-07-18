@@ -22,6 +22,6 @@ export async function fetchRowsFromSheet(worksheetId: number): Promise<GoogleSpr
   const spreadSheetId = process.env.SPREADSHEET_ID ?? ''
   const doc = new GoogleSpreadsheet(spreadSheetId, serviceAccountAuth);
   await doc.loadInfo();
-  const sheet = await doc.sheetsById[worksheetId];
+  const sheet = doc.sheetsById[worksheetId];
   return await sheet.getRows();
 }
