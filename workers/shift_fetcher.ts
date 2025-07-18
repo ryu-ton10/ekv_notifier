@@ -1,30 +1,5 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet';
 import type { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { JWT } from 'google-auth-library';
 import 'dotenv/config'
-
-/**
- * シートから全ての列情報を取得する
- *
- * @returns GoogleSpreadsheetRow[]
- */
-export async function getRows(): Promise<GoogleSpreadsheetRow[]> {
-  const serviceAccountAuth = new JWT({
-    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY,
-    scopes: [
-      'https://www.googleapis.com/auth/spreadsheets',
-    ]
-  });
-
-  const sheetId = process.env.SPREADSHEET_ID ?? ''
-  const worksheetId = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
-  const doc = new GoogleSpreadsheet(sheetId, serviceAccountAuth);
-  await doc.loadInfo();
-  const sheet = await doc.sheetsById[Number(worksheetId)];
-  const rows = await sheet.getRows();
-  return rows
-}
 
 /**
  * loadMembersFromSheet
