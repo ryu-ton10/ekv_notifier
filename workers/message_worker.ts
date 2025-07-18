@@ -1,8 +1,7 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet'
-import { JWT } from 'google-auth-library'
 import type { BaseGuildTextChannel, Client } from 'discord.js';
 import type { MembersAndRule } from './member_fetcher';
 import 'dotenv/config'
+import { fetchRowsFromSheet } from './spreadsheet_worker';
 
 type GameMaster = {
   name: string;
@@ -43,21 +42,9 @@ export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promis
  * @return string 実際に送信するメッセージ内容
  */
 export async function yieldMemberListMessage(members: string[]): Promise<string> {
-  const sheetId = process.env.SPREADSHEET_ID ?? ''
-  const worksheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
-  const serviceAccountAuth = new JWT({
-    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY,
-    scopes: [
-      'https://www.googleapis.com/auth/spreadsheets',
-    ]
-  });
+  const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
 
-  const doc = new GoogleSpreadsheet(sheetId, serviceAccountAuth);
-  await doc.loadInfo();
-  const memberMasterSheet = await doc.sheetsById[Number(worksheetId)];
-  const memberRows = await memberMasterSheet.getRows();
-
+  const memberRows = await fetchRowsFromSheet(Number(memberMasterSheetId));
   const gm = await fetchGameMaster();
   let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
   text = `${text} ☆主催☆【${gm.name}】\n<${gm.twitter}>\n<${gm.youtube}>\n\n`;
@@ -100,21 +87,9 @@ async function fetchGameMaster(): Promise<GameMaster> {
     youtube: ''
   };
 
-  const serviceAccountAuth = new JWT({
-    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY,
-    scopes: [
-      'https://www.googleapis.com/auth/spreadsheets',
-    ]
-  });
-
-  const sheetId = process.env.SPREADSHEET_ID ?? ''
   const gameMasterSheetId = process.env.GAME_MASTER_WORKSHEET_ID ?? ''
-  const doc = new GoogleSpreadsheet(sheetId, serviceAccountAuth);
-  await doc.loadInfo();
-  const sheet = await doc.sheetsById[Number(gameMasterSheetId)];
-  const rows = await sheet.getRows();
 
+  const rows = await fetchRowsFromSheet(Number(gameMasterSheetId));
   gm.name = rows[0].get('name');
   gm.discordId = rows[0].get('discordId');
   gm.twitter = rows[0].get('twitter');
