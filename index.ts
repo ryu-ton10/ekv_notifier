@@ -41,7 +41,7 @@ for (const folder of commandFolders) {
   }
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 client.on(Events.InteractionCreate, async (interaction: any) => {
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName)
@@ -55,9 +55,9 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
     await command.execute(interaction)
   } catch (error) {
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral })
+      await interaction.followUp({ content: `There was an error while executing this command!: ${error}`, flags: MessageFlags.Ephemeral })
     } else {
-      await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral })
+      await interaction.reply({ content: `There was an error while executing this command!: ${error}`, flags: MessageFlags.Ephemeral })
     }
   }
 })
@@ -106,7 +106,7 @@ const satJob = CronJob.from({
   timeZone: 'Asia/Tokyo',
 })
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 client.on('messageCreate', (message: any) => {
   if (message.author.bot) return; //BOTのメッセージには反応しない
 
