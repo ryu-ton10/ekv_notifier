@@ -31,7 +31,7 @@ export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promis
   const gm = await fetchGameMaster();
   message = `${message}<@${gm.discordId}>`
 
-  message = `${message}\n本日は EKV マリカです！参加者とルールを確認しましょう〜。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！`
+  message = `${message}\n本日は EKV マリカです！参加者とルールを確認しましょう。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！`
   return message;
 }
 
@@ -59,7 +59,7 @@ export async function yieldMemberListMessage(members: string[]): Promise<string>
   const memberRows = await memberMasterSheet.getRows();
 
   const gm = await fetchGameMaster();
-  let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n";
+  let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
   text = `${text} ☆主催☆【${gm.name}】\n<${gm.twitter}>\n<${gm.youtube}>\n\n`;
   for (const r of memberRows) {
     for (const m of members) {
