@@ -131,4 +131,5 @@ client.on('ready', () => {
   satJob.start();
   console.log('cron job start');
 });
+
 client.login(process.env.TOKEN);

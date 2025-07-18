@@ -22,6 +22,10 @@ export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promis
   let message = '';
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of membersAndRule.members) {
+    // メンバーが 12 人以下のケースを考慮している
+    if (member === "#N/A") {
+      continue;
+    }
     message = `${message}<@${member}> `;
   }
   const gm = await fetchGameMaster();
