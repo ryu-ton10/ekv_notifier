@@ -36,21 +36,27 @@ export async function loadMembersFromSheet(): Promise<MembersAndRule> {
 
   // 現在の時刻の取得
   const currentDate = new Date(Date.now());
-  const year = await currentDate.getFullYear();
+  const year = currentDate.getFullYear();
   // NOTE: Date から生成される月は 0 からのスタートであるため +1 している
-  const month = await String(Number(currentDate.getMonth()) + 1);
-  const date = await currentDate.getDate();
+  const month = String(Number(currentDate.getMonth()) + 1);
+  const date = currentDate.getDate();
 
-  const currentDateString = `${year}${month}${date}`;
+  const row = rows.filter((r: GoogleSpreadsheetRow) => {
+    return r.get('year') === String(year)
+  }).filter((r: GoogleSpreadsheetRow) => {
+    return r.get('month') === String(month)
+  }).find((r: GoogleSpreadsheetRow) => {
+    return r.get('day') === String(date)
+  })
 
-  const row = rows.find((r: GoogleSpreadsheetRow) => r.get('date') === currentDateString);
   if (!row) {
     return result;
   }
-  // NOTE: 日付の列を除いた 2 列目からの参加者情報を取得する
+
   for ( let i = 0; i < 12; i++ ) {
     result.members.push(row.get(String(i)))
   }
+
   result.rule = row.get('rule');
-  return result
+  return result;
 }
