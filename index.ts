@@ -1,7 +1,7 @@
 import { loadMembersFromSheet } from "./workers/member_fetcher"
 import type { MembersAndRule } from "./workers/member_fetcher"
 import { yieldNoticeMessage, yieldMemberListMessage, sendMessage } from "./workers/message_worker";
-import { loadCommands } from "workers/commandLoadWorker";
+import { loadCommands } from "./workers/commandLoadWorker";
 import type { CommandInteraction } from "discord.js";
 import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
 import { CronJob } from 'cron'
