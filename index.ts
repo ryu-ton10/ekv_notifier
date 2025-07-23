@@ -1,9 +1,7 @@
 import { loadMembersFromSheet } from "./workers/member_fetcher"
 import type { MembersAndRule } from "./workers/member_fetcher"
 import { yieldNoticeMessage, yieldMemberListMessage, sendMessage } from "./workers/message_worker";
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import { fileURLToPath } from 'node:url';
+import { loadCommands } from "workers/commandLoadWorker";
 import type { CommandInteraction } from "discord.js";
 import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
 import { CronJob } from 'cron'
@@ -19,27 +17,8 @@ const client = new Client(
 );
 client.commands = new Collection<string, { interaction: (interaction: CommandInteraction) => Promise<void>; execute(interaction: CommandInteraction): () => void; }>();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const foldersPath = path.join(__dirname, 'commands')
-const commandFolders = fs.readdirSync(foldersPath)
-
-for (const folder of commandFolders) {
-  const commandsPath = path.join(foldersPath, folder)
-  const commandFiles = fs.readdirSync(commandsPath).filter((file: string) => file.endsWith('.ts'))
-
-  for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    (async () => {
-      const command = await import(filePath)
-      if (command.data && command.execute) {
-        client.commands.set(command.data.name, command)
-      } else {
-        console.log('data もしくは execute がありません')
-      }
-    })()
-  }
-}
+// スラッシュコマンドを利用するための準備を行う
+loadCommands(client)
 
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 client.on(Events.InteractionCreate, async (interaction: any) => {
