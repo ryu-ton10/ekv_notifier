@@ -12,7 +12,7 @@ import type { Client } from 'discord.js'
 export function loadCommands(client: Client) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const foldersPath = path.join(__dirname, 'commands')
+  const foldersPath = path.join(__dirname, '/../commands')
   const commandFolders = fs.readdirSync(foldersPath)
 
   for (const folder of commandFolders) {
