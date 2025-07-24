@@ -86,8 +86,7 @@ export function yieldStreamListMessage(urls: VideoUrl[]): string {
  * @param message string
  * @param client Client
  */
-export function sendMessage(message: string, client: Client) {
-  const channelId = process.env.CHANNEL_ID ?? ''
+export function sendMessage(channelId: string, message: string, client: Client) {
   const channel = client.channels.cache.get(channelId) as BaseGuildTextChannel;
   if (!channel) return
   channel.send(message);

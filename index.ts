@@ -54,7 +54,8 @@ const execute = () => {
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
       // TODO: 環境変数を boolean 型にする
       if (process.env.IS_PRODUCTION === 'true') {
-        sendMessage(message, client);
+        const channelId = process.env.CHAT_CHANNEL_ID ?? ''
+        sendMessage(channelId, message, client);
         console.log('sent a schedule notification message');
       }
       console.log('finished all notification process');
@@ -69,7 +70,8 @@ const fetchStreamUrls = () => {
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
       // TODO: 環境変数を boolean 型にする
       if (process.env.IS_PRODUCTION === 'true') {
-        sendMessage(message, client);
+        const channelId = process.env.STREAM_CHANNEL_ID ?? ''
+        sendMessage(channelId, message, client);
         console.log('sent a stream urls');
       }
       console.log('finished all fetch stream url process');
