@@ -1,5 +1,6 @@
 import type { BaseGuildTextChannel, Client } from 'discord.js';
 import type { MembersAndRule } from './member_fetcher';
+import type { VideoUrl } from './streamFetcher';
 import 'dotenv/config'
 import { fetchRowsFromSheet } from './spreadsheet_worker';
 
@@ -8,6 +9,7 @@ type GameMaster = {
   discordId: string;
   twitter: string;
   youtube: string;
+  channelId: string;
 }
 
 /**
@@ -60,6 +62,24 @@ export async function yieldMemberListMessage(members: string[]): Promise<string>
 }
 
 /**
+ * yieldStreamListMessage
+ * 開始前のメンバーの EKV 配信枠一覧を生成する
+ *
+ * @param urls: VideoUrl[]
+ * @return string
+ */
+export function yieldStreamListMessage(urls: VideoUrl[]): string {
+  let text = ''
+  text = `${text}----------------------------------\n`
+  text = `${text}現時点で立てられている本日の EKV 配信枠をご案内します。\n\n`
+  for (const u of urls) {
+    text = `${text}【${u.name}】\n${u.url}\n\n`
+  }
+  text = `${text}----------------------------------`
+  return text
+}
+
+/**
  * sendMessage
  * 指定したチャンネルにメッセージを送信する
  *
@@ -79,12 +99,13 @@ export function sendMessage(message: string, client: Client) {
  *
  * @return Promise<GameMaster>
  */
-async function fetchGameMaster(): Promise<GameMaster> {
+export async function fetchGameMaster(): Promise<GameMaster> {
   const gm: GameMaster = {
     name: '',
     discordId: '',
     twitter: '',
-    youtube: ''
+    youtube: '',
+    channelId: ''
   };
 
   const gameMasterSheetId = process.env.GAME_MASTER_WORKSHEET_ID ?? ''
@@ -94,5 +115,6 @@ async function fetchGameMaster(): Promise<GameMaster> {
   gm.discordId = rows[0].get('discordId');
   gm.twitter = rows[0].get('twitter');
   gm.youtube = rows[0].get('youtube');
+  gm.channelId = rows[0].get('channelId');
   return gm;
 }
