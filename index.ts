@@ -65,6 +65,9 @@ const execute = () => {
 
 const fetchStreamUrls = () => {
   loadMembersFromSheet().then(async (membersAndRule: MembersAndRule) => {
+    if (membersAndRule.members.length === 0) {
+      return;
+    }
     fetchStreams(membersAndRule.members).then((urls: VideoUrl[]) => {
       const message = yieldStreamListMessage(urls)
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
