@@ -13,14 +13,14 @@ export async function fetchStreams(members: string[]): Promise<VideoUrl[]> {
 
   // 決め打ちで GM の配信枠を取得する
   const gm = await fetchGameMaster();
-  result.push(await callApi(gm.name, gm.channelId))
+  result.push(await callApi(gm.name, gm.channelId, 'upcoming'))
 
   // 当日参加するメンバーの配信枠を取得する
   const memberRows = await fetchRowsFromSheet(Number(memberMasterSheetId));
   for (const r of memberRows) {
     for (const m of members) {
       if (r.get('discordId') === m) {
-        result.push(await callApi(r.get('name'), r.get('channelId')))
+        result.push(await callApi(r.get('name'), r.get('channelId'), 'upcoming'))
       }
     }
   }
@@ -28,8 +28,8 @@ export async function fetchStreams(members: string[]): Promise<VideoUrl[]> {
   return result
 }
 
-async function callApi(name: string, channelId: string): Promise<{ name: string; url: string }> {
-  const url = `https://content-youtube.googleapis.com/youtube/v3/search?q=EKV&channelId=${channelId}&maxResults=1&part=snippet&type=video&eventType=upcoming&key=${process.env.YOUTUBE_API_KEY}`
+export async function callApi(name: string, channelId: string, eventType: string): Promise<{ name: string; url: string }> {
+  const url = `https://content-youtube.googleapis.com/youtube/v3/search?q=EKV&channelId=${channelId}&maxResults=1&part=snippet&type=video&eventType=${eventType}&key=${process.env.YOUTUBE_API_KEY}`
 
   try {
     const response = await fetch(url)
