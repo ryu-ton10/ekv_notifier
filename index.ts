@@ -82,26 +82,26 @@ const fetchStreamUrls = () => {
   })
 }
 
-const wedJob = CronJob.from({
+const wedNoticeJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
   onTick: () => {
-    console.log('start bot');
+    console.log('start to send a notice message');
     execute();
   },
   onComplete: () => {
-    console.log('completed to send a message')
+    console.log('completed to send a notice message')
   },
   start: false,
   timeZone: 'Asia/Tokyo',
 })
-const satJob = CronJob.from({
+const satNoticeJob = CronJob.from({
   cronTime: '0 0 12 * * 6',
   onTick: () => {
-    console.log('start bot');
+    console.log('start to send a notice message');
     execute();
   },
   onComplete: () => {
-    console.log('completed to send a message')
+    console.log('completed to send a notice message')
   },
   start: false,
   timeZone: 'Asia/Tokyo',
@@ -109,11 +109,11 @@ const satJob = CronJob.from({
 const wedUrlFetchJob = CronJob.from({
   cronTime: '0 30 20 * * 3',
   onTick: () => {
-    console.log('start bot');
+    console.log('start to send a stream urls');
     fetchStreamUrls();
   },
   onComplete: () => {
-    console.log('completed to send a message')
+    console.log('completed to send a stream urls');
   },
   start: false,
   timeZone: 'Asia/Tokyo',
@@ -121,11 +121,11 @@ const wedUrlFetchJob = CronJob.from({
 const satUrlFetchJob = CronJob.from({
   cronTime: '0 0 23 * * 6',
   onTick: () => {
-    console.log('start bot');
+    console.log('start to send a stream urls');
     fetchStreamUrls();
   },
   onComplete: () => {
-    console.log('completed to send a message')
+    console.log('completed to send a stream urls');
   },
   start: false,
   timeZone: 'Asia/Tokyo',
@@ -136,8 +136,8 @@ client.on('messageCreate', (message: any) => {
   if (message.author.bot) return; //BOTのメッセージには反応しない
 
   if (message.content === "stop bot") {
-    wedJob.stop();
-    satJob.stop();
+    wedNoticeJob.stop();
+    satNoticeJob.stop();
     wedUrlFetchJob.stop();
     satUrlFetchJob.stop();
     client.send("stopped cron jobs");
@@ -149,8 +149,8 @@ client.on('messageCreate', (message: any) => {
     fetchStreamUrls();
   }
   if (message.content === "restart bot") {
-    wedJob.start();
-    satJob.start();
+    wedNoticeJob.start();
+    satNoticeJob.start();
     wedUrlFetchJob.start();
     satUrlFetchJob.start();
     client.send("started cron jobs");
@@ -159,8 +159,8 @@ client.on('messageCreate', (message: any) => {
 
 client.on('ready', () => {
   console.log('ready to send');
-  wedJob.start();
-  satJob.start();
+  wedNoticeJob.start();
+  satNoticeJob.start();
   wedUrlFetchJob.start();
   satUrlFetchJob.start();
   console.log('cron job start');
