@@ -1,4 +1,4 @@
-import { fetchGameMaster } from "./message_worker"
+import { fetchGameMaster } from "./member_fetcher"
 import { fetchRowsFromSheet } from "./spreadsheet_worker"
 import 'dotenv/config'
 

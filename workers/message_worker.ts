@@ -3,14 +3,7 @@ import type { MembersAndRule } from './member_fetcher';
 import type { VideoUrl } from './streamFetcher';
 import 'dotenv/config'
 import { fetchRowsFromSheet } from './spreadsheet_worker';
-
-type GameMaster = {
-  name: string;
-  discordId: string;
-  twitter: string;
-  youtube: string;
-  channelId: string;
-}
+import { fetchGameMaster } from './member_fetcher';
 
 /**
  * yieldMessage
@@ -32,7 +25,7 @@ export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promis
   const gm = await fetchGameMaster();
   message = `${message}<@${gm.discordId}>`
 
-  message = `${message}\n本日は EKV マリカです！参加者とルールを確認しましょう。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠がある方は <#1127915567232327740> に URL を貼ってください！`
+  message = `${message}\n本日は EKV マリカです！参加者とルールを確認しましょう。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠については、配信開始 30 分前に私が自動的に取得します。`
   return message;
 }
 
@@ -90,30 +83,4 @@ export function sendMessage(channelId: string, message: string, client: Client) 
   const channel = client.channels.cache.get(channelId) as BaseGuildTextChannel;
   if (!channel) return
   channel.send(message);
-}
-
-/**
- * fetchGameMaster
- * 主催者の情報を取得する
- *
- * @return Promise<GameMaster>
- */
-export async function fetchGameMaster(): Promise<GameMaster> {
-  const gm: GameMaster = {
-    name: '',
-    discordId: '',
-    twitter: '',
-    youtube: '',
-    channelId: ''
-  };
-
-  const gameMasterSheetId = process.env.GAME_MASTER_WORKSHEET_ID ?? ''
-
-  const rows = await fetchRowsFromSheet(Number(gameMasterSheetId));
-  gm.name = rows[0].get('name');
-  gm.discordId = rows[0].get('discordId');
-  gm.twitter = rows[0].get('twitter');
-  gm.youtube = rows[0].get('youtube');
-  gm.channelId = rows[0].get('channelId');
-  return gm;
 }

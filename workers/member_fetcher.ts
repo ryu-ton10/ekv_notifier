@@ -7,6 +7,14 @@ export type MembersAndRule = {
   rule: string;
 }
 
+type GameMaster = {
+  name: string;
+  discordId: string;
+  twitter: string;
+  youtube: string;
+  channelId: string;
+}
+
 /**
  * loadMembersFromSheet
  * スプレッドシートから参加メンバーを取得する
@@ -46,4 +54,30 @@ export async function loadMembersFromSheet(): Promise<MembersAndRule> {
 
   result.rule = row.get('rule');
   return result;
+}
+
+/**
+ * fetchGameMaster
+ * 主催者の情報を取得する
+ *
+ * @return Promise<GameMaster>
+ */
+export async function fetchGameMaster(): Promise<GameMaster> {
+  const gm: GameMaster = {
+    name: '',
+    discordId: '',
+    twitter: '',
+    youtube: '',
+    channelId: ''
+  };
+
+  const gameMasterSheetId = process.env.GAME_MASTER_WORKSHEET_ID ?? ''
+
+  const rows = await fetchRowsFromSheet(Number(gameMasterSheetId));
+  gm.name = rows[0].get('name');
+  gm.discordId = rows[0].get('discordId');
+  gm.twitter = rows[0].get('twitter');
+  gm.youtube = rows[0].get('youtube');
+  gm.channelId = rows[0].get('channelId');
+  return gm;
 }
