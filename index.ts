@@ -27,7 +27,7 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
   setupCommands(interaction, client)
 })
 
-const execute = () => {
+const sendNoticeMessage = () => {
   loadMembersFromSheet().then(async (membersAndRule: MembersAndRule) => {
     if (membersAndRule.members.length === 0) {
       return;
@@ -70,7 +70,7 @@ const wedNoticeJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
   onTick: () => {
     console.log('start to send a notice message');
-    execute();
+    sendNoticeMessage();
   },
   onComplete: () => {
     console.log('completed to send a notice message')
@@ -82,7 +82,7 @@ const satNoticeJob = CronJob.from({
   cronTime: '0 0 12 * * 6',
   onTick: () => {
     console.log('start to send a notice message');
-    execute();
+    sendNoticeMessage();
   },
   onComplete: () => {
     console.log('completed to send a notice message')
@@ -127,7 +127,7 @@ client.on('messageCreate', (message: any) => {
     client.send("stopped cron jobs");
   }
   if (message.content === "send notification now") {
-    execute();
+    sendNoticeMessage();
   }
   if (message.content === "send strem urls now") {
     fetchStreamUrls();
