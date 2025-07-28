@@ -2,6 +2,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url';
 import type { Client } from 'discord.js'
+import { MessageFlags } from 'discord.js'
 
 /**
  * loadCommands
@@ -29,6 +30,33 @@ export function loadCommands(client: Client) {
           console.log('data もしくは execute がありません')
         }
       })()
+    }
+  }
+}
+
+/**
+ * setupCommands
+ * コマンドを実行可能な状態にする
+ *
+ * @param client Client
+ */
+// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
+export async function setupCommands(interaction: any, client: Client) {
+  if (!interaction.isChatInputCommand()) return;
+  const command = client.commands.get(interaction.commandName)
+
+  if (!command) {
+    console.error(`${interaction.commandName} は見つかりませんでした`)
+    return;
+  }
+
+  try {
+    await command.execute(interaction)
+  } catch (error) {
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp({ content: `There was an error while executing this command!: ${error}`, flags: MessageFlags.Ephemeral })
+    } else {
+      await interaction.reply({ content: `There was an error while executing this command!: ${error}`, flags: MessageFlags.Ephemeral })
     }
   }
 }

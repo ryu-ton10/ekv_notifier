@@ -2,10 +2,10 @@ import { loadMembersFromSheet } from "./workers/member_fetcher"
 import type { MembersAndRule } from "./workers/member_fetcher"
 import type { VideoUrl } from "./workers/streamFetcher";
 import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage,sendMessage } from "./workers/message_worker";
-import { loadCommands } from "./workers/commandLoadWorker";
+import { loadCommands, setupCommands } from "./workers/commandLoadWorker";
 import { fetchStreams } from "./workers/streamFetcher";
 import type { CommandInteraction } from "discord.js";
-import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { CronJob } from 'cron'
 import 'dotenv/config'
 
@@ -24,23 +24,7 @@ loadCommands(client)
 
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 client.on(Events.InteractionCreate, async (interaction: any) => {
-  if (!interaction.isChatInputCommand()) return;
-  const command = client.commands.get(interaction.commandName)
-
-  if (!command) {
-    console.error(`${interaction.commandName} は見つかりませんでした`)
-    return;
-  }
-
-  try {
-    await command.execute(interaction)
-  } catch (error) {
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({ content: `There was an error while executing this command!: ${error}`, flags: MessageFlags.Ephemeral })
-    } else {
-      await interaction.reply({ content: `There was an error while executing this command!: ${error}`, flags: MessageFlags.Ephemeral })
-    }
-  }
+  setupCommands(interaction, client)
 })
 
 const execute = () => {
