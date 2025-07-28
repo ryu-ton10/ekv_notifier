@@ -3,7 +3,6 @@ import type { MembersAndRule } from './member_fetcher';
 import type { VideoUrl } from './streamFetcher';
 import 'dotenv/config'
 import { fetchRowsFromSheet } from './spreadsheet_worker';
-import { callApi } from './streamFetcher';
 
 type GameMaster = {
   name: string;
@@ -78,33 +77,6 @@ export function yieldStreamListMessage(urls: VideoUrl[]): string {
   }
   text = `${text}----------------------------------`
   return text
-}
-
-/**
- * yieldAfterStreamMessage
- * 取得したメンバーを基に参加者の URL 一覧表を作成する
- *
- * @param members string
- * @return string 実際に送信するメッセージ内容
- */
-export async function yieldAfterStreamMessage(members: string[]): Promise<string> {
-  const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
-
-  const memberRows = await fetchRowsFromSheet(Number(memberMasterSheetId));
-  const gm = await fetchGameMaster();
-  let text = "\n皆様 EKV の配信お疲れ様です。各視点の配信枠付きの参加者一覧をお送りします。\nアーカイブの概要欄にご活用ください。\n---------------------------------\n本日の参加者一覧（順不同・敬称略）\n\n";
-  const gmStreamInfo = await callApi(gm.name, gm.channelId, 'live')
-  text = `${text} ☆主催☆【${gm.name}】\n<${gm.twitter}>\n<${gm.youtube}>\n配信枠 : ${gmStreamInfo.url}>\n`;
-  for (const r of memberRows) {
-    for (const m of members) {
-      if (r.get('discordId') === m) {
-        const streamInfo = await callApi(r.get('name'), r.get('channelId'), 'live')
-        text = `${text}【${r.get('name')}】\n<${r.get('twitter')}>\n<${r.get('youtube')}>\n配信枠 : <${streamInfo.url}>\n\n`;
-      }
-    }
-  }
-  text = `${text}----------------------------------`
-  return text;
 }
 
 /**

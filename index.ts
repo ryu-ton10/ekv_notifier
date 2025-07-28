@@ -1,7 +1,7 @@
 import { loadMembersFromSheet } from "./workers/member_fetcher"
 import type { MembersAndRule } from "./workers/member_fetcher"
 import type { VideoUrl } from "./workers/streamFetcher";
-import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage,sendMessage, yieldAfterStreamMessage } from "./workers/message_worker";
+import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage,sendMessage } from "./workers/message_worker";
 import { loadCommands } from "./workers/commandLoadWorker";
 import { fetchStreams } from "./workers/streamFetcher";
 import type { CommandInteraction } from "discord.js";
@@ -82,25 +82,6 @@ const fetchStreamUrls = () => {
   })
 }
 
-const assembleAfterStreamMessage = () => {
-  loadMembersFromSheet().then(async (membersAndRule: MembersAndRule) => {
-    if (membersAndRule.members.length === 0) {
-      return;
-    }
-    yieldAfterStreamMessage(membersAndRule.members).then(async (message: string) => {
-      // デプロイ先の本番環境でのみメッセージが送信される仕組み
-      // TODO: 環境変数を boolean 型にする
-      if (process.env.IS_PRODUCTION === 'true') {
-        const channelId = process.env.CHAT_CHANNEL_ID ?? ''
-        sendMessage(channelId, message, client);
-        console.log('sent a after stream message');
-      }
-      console.log('finished all after stream process');
-    })
-  })
-}
-
-
 const wedNoticeJob = CronJob.from({
   cronTime: '0 0 12 * * 3',
   onTick: () => {
@@ -149,31 +130,6 @@ const satUrlFetchJob = CronJob.from({
   start: false,
   timeZone: 'Asia/Tokyo',
 })
-const wedAfterStresamJob = CronJob.from({
-  cronTime: '0 0 23 * * 3',
-  onTick: () => {
-    console.log('start to send an after stream message');
-    assembleAfterStreamMessage();
-  },
-  onComplete: () => {
-    console.log('completed to send an after stream message');
-  },
-  start: false,
-  timeZone: 'Asia/Tokyo',
-})
-const satAfterStreamJob = CronJob.from({
-  cronTime: '0 0 1 * * 7',
-  onTick: () => {
-    console.log('start to send an after stream message');
-    assembleAfterStreamMessage();
-  },
-  onComplete: () => {
-    console.log('completed to send an after stream message');
-  },
-  start: false,
-  timeZone: 'Asia/Tokyo',
-})
-
 
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 client.on('messageCreate', (message: any) => {
@@ -184,8 +140,6 @@ client.on('messageCreate', (message: any) => {
     satNoticeJob.stop();
     wedUrlFetchJob.stop();
     satUrlFetchJob.stop();
-    wedAfterStresamJob.stop();
-    satAfterStreamJob.stop();
     client.send("stopped cron jobs");
   }
   if (message.content === "send notification now") {
@@ -199,8 +153,6 @@ client.on('messageCreate', (message: any) => {
     satNoticeJob.start();
     wedUrlFetchJob.start();
     satUrlFetchJob.start();
-    wedAfterStresamJob.start();
-    satAfterStreamJob.start();
     client.send("started cron jobs");
   }
 });
@@ -211,8 +163,6 @@ client.on('ready', () => {
   satNoticeJob.start();
   wedUrlFetchJob.start();
   satUrlFetchJob.start();
-  wedAfterStresamJob.start();
-  satAfterStreamJob.start();
   console.log('cron job start');
 });
 
