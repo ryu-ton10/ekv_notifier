@@ -1,6 +1,6 @@
 import type { GoogleSpreadsheetRow } from "google-spreadsheet";
 import 'dotenv/config'
-import { fetchRowsFromSheet } from './spreadsheet_worker';
+import { fetchRowsFromSheet } from './spreadsheetWorker';
 
 export type MembersAndRule = {
   members: string[];

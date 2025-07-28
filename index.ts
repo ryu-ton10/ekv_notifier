@@ -1,8 +1,8 @@
-import { loadMembersFromSheet } from "./workers/member_fetcher"
-import type { MembersAndRule } from "./workers/member_fetcher"
+import { loadMembersFromSheet } from "./workers/memberFetcher"
+import type { MembersAndRule } from "./workers/memberFetcher"
 import type { VideoUrl } from "./workers/streamFetcher";
-import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage,sendMessage } from "./workers/message_worker";
-import { loadCommands, setupCommands } from "./workers/commandLoadWorker";
+import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage,sendMessage } from "./workers/messageWorker";
+import { loadCommands, setupCommands } from "./workers/commandWorker";
 import { fetchStreams } from "./workers/streamFetcher";
 import type { CommandInteraction } from "discord.js";
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'

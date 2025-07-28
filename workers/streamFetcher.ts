@@ -1,5 +1,5 @@
-import { fetchGameMaster } from "./member_fetcher"
-import { fetchRowsFromSheet } from "./spreadsheet_worker"
+import { fetchGameMaster } from "./memberFetcher"
+import { fetchRowsFromSheet } from "./spreadsheetWorker"
 import 'dotenv/config'
 
 export type VideoUrl = {

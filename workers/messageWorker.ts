@@ -1,9 +1,9 @@
 import type { BaseGuildTextChannel, Client } from 'discord.js';
-import type { MembersAndRule } from './member_fetcher';
+import type { MembersAndRule } from './memberFetcher';
 import type { VideoUrl } from './streamFetcher';
 import 'dotenv/config'
-import { fetchRowsFromSheet } from './spreadsheet_worker';
-import { fetchGameMaster } from './member_fetcher';
+import { fetchRowsFromSheet } from './spreadsheetWorker';
+import { fetchGameMaster } from './memberFetcher';
 
 /**
  * yieldMessage
