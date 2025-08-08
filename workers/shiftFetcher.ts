@@ -38,6 +38,7 @@ export const fetchShift = async (year: string | null, month: string | null, user
  * @param month string
  * @return GoogleSpreadsheetRow<Record<string, any>>[] 
  */
+// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 const filterShift = (rows: GoogleSpreadsheetRow[], userId: string, year: string, month: string): GoogleSpreadsheetRow<Record<string, any>>[] => {
   const filteredRows = rows.filter((r) => r.get('year') === year && r.get('month') === month);
 
@@ -60,6 +61,7 @@ const filterShift = (rows: GoogleSpreadsheetRow[], userId: string, year: string,
  * @param shiftDates GoogleSpreadsheetRow<Record<string, any>>[] 
  * @return string 参加予定日を含めたメッセージ
  */
+// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 const enableShiftMessage = (shiftDates: GoogleSpreadsheetRow<Record<string, any>>[]): string => {
   if (shiftDates.length === 0) {
     return '指定した月の参加予定日は、ありません。'
