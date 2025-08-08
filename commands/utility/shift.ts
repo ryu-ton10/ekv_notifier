@@ -20,6 +20,6 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     month = month.slice(1)
   }
 
-  const message = fetchShift(year, month, interaction.user.id)
+  const message = await fetchShift(year, month, interaction.user.id)
   await interaction.reply(`${interaction.user} さんの ${year}年${month}月の参加予定日は以下です。\n${message}\n※突発的な変動や調整がありますので、必ず <#1131285823757758475> をご確認ください！`)
 }
