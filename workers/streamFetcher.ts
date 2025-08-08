@@ -7,7 +7,7 @@ export type VideoUrl = {
   url: string
 }
 
-export async function fetchStreams(members: string[]): Promise<VideoUrl[]> {
+export const fetchStreams = async (members: string[]): Promise<VideoUrl[]> => {
   const result: VideoUrl[] = []
   const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
 
@@ -28,7 +28,7 @@ export async function fetchStreams(members: string[]): Promise<VideoUrl[]> {
   return result
 }
 
-export async function callApi(name: string, channelId: string, eventType: string): Promise<{ name: string; url: string }> {
+export const callApi = async (name: string, channelId: string, eventType: string): Promise<VideoUrl> => {
   const url = `https://content-youtube.googleapis.com/youtube/v3/search?q=EKV&channelId=${channelId}&maxResults=1&part=snippet&type=video&eventType=${eventType}&key=${process.env.YOUTUBE_API_KEY}`
 
   try {

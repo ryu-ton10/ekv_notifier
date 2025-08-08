@@ -10,7 +10,7 @@ import { GoogleSpreadsheet } from 'google-spreadsheet'
  * @return Promise<GoogleSpreadsheetRow<Record<string, any>>[]>
  */
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
-export async function fetchRowsFromSheet(worksheetId: number): Promise<GoogleSpreadsheetRow<Record<string, any>>[]> {
+export const fetchRowsFromSheet = async (worksheetId: number): Promise<GoogleSpreadsheetRow<Record<string, any>>[]> => {
   const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,

@@ -12,7 +12,7 @@ import { fetchGameMaster } from './memberFetcher';
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promise<string> {
+export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promise<string> => {
   let message = '';
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of membersAndRule.members) {
@@ -36,7 +36,7 @@ export async function yieldNoticeMessage(membersAndRule: MembersAndRule): Promis
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-export async function yieldMemberListMessage(members: string[]): Promise<string> {
+export const yieldMemberListMessage = async (members: string[]): Promise<string> => {
   const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
 
   const memberRows = await fetchRowsFromSheet(Number(memberMasterSheetId));
@@ -61,7 +61,7 @@ export async function yieldMemberListMessage(members: string[]): Promise<string>
  * @param urls: VideoUrl[]
  * @return string
  */
-export function yieldStreamListMessage(urls: VideoUrl[]): string {
+export const yieldStreamListMessage = (urls: VideoUrl[]): string => {
   let text = ''
   text = `${text}----------------------------------\n`
   text = `${text}現時点で立てられている本日の EKV 配信枠をご案内します。\n\n`
@@ -79,7 +79,7 @@ export function yieldStreamListMessage(urls: VideoUrl[]): string {
  * @param message string
  * @param client Client
  */
-export function sendMessage(channelId: string, message: string, client: Client) {
+export const sendMessage = (channelId: string, message: string, client: Client) => {
   const channel = client.channels.cache.get(channelId) as BaseGuildTextChannel;
   if (!channel) return
   channel.send(message);

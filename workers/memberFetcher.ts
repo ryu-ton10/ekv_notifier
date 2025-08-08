@@ -21,7 +21,7 @@ type GameMaster = {
  *
  * @return string[] 参加メンバーの一覧
 */
-export async function loadMembersFromSheet(): Promise<MembersAndRule> {
+export const loadMembersFromSheet = async (): Promise<MembersAndRule> => {
   const result = {
     members: [] as string[],
     rule: ''
@@ -62,7 +62,7 @@ export async function loadMembersFromSheet(): Promise<MembersAndRule> {
  *
  * @return Promise<GameMaster>
  */
-export async function fetchGameMaster(): Promise<GameMaster> {
+export const fetchGameMaster = async (): Promise<GameMaster> => {
   const gm: GameMaster = {
     name: '',
     discordId: '',

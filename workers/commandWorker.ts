@@ -10,7 +10,7 @@ import { MessageFlags } from 'discord.js'
  *
  * @param client Client
  */
-export function loadCommands(client: Client) {
+export const loadCommands = (client: Client) => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const foldersPath = path.join(__dirname, '/../commands')
@@ -41,7 +41,7 @@ export function loadCommands(client: Client) {
  * @param client Client
  */
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
-export async function setupCommands(interaction: any, client: Client) {
+export const setupCommands = async (interaction: any, client: Client) => {
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName)
 

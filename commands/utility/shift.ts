@@ -13,7 +13,7 @@ export const data = new SlashCommandBuilder()
     option.setName('month')
       .setDescription('月'));
 
-export async function execute(interaction: ChatInputCommandInteraction) {
+export const execute = async (interaction: ChatInputCommandInteraction) => {
   let year = await interaction.options.getString('year')
   let month = await interaction.options.getString('month')
   // NOTE: 04 などの文字が入力された場合は先頭の 0 を削除する
