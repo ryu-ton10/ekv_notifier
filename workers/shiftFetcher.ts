@@ -1,17 +1,44 @@
 import type { GoogleSpreadsheetRow } from "google-spreadsheet";
+import { fetchRowsFromSheet } from "./spreadsheetWorker";
 import 'dotenv/config'
 
 /**
- * loadMembersFromSheet
+ * fetchShift
  * スプレッドシートから自身の参加日を取得する
+ *
+ * @param year string | null
+ * @param month string | null
+ * @param userId string | null
+ * @return string 参加予定日を含めたメッセージ
+ */
+export const fetchShift = async (year: string | null, month: string | null, userId: string): Promise<string> => {
+  const memberListSheetId = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
+  let message = ''
+  await fetchRowsFromSheet(Number(memberListSheetId)).then(rows => {
+    if (!year || !month) {
+      // 年月を入力しなかった場合は、現在日時のシフトを返却する
+      const currentDate = new Date(Date.now());
+      year = String(currentDate.getFullYear());
+      // NOTE: Date から生成される月は 0 からのスタートであるため +1 している
+      month = String(Number(currentDate.getMonth()) + 1);
+    }
+    const shiftDates = filterShift(rows, userId, year, month)
+    message = enableShiftMessage(shiftDates)
+  })
+  return message
+}
+
+/**
+ * filterShift
+ * 取得したスプレッドシートの情報と照合して参加日を精査する
  *
  * @param rows GoogleSpreadsheetRow[]
  * @param userId string
  * @param year string
  * @param month string
- * @return string 参加予定日を含めたメッセージ
-*/
-export const loadShiftFromSheet = (rows: GoogleSpreadsheetRow[], userId: string, year: string, month: string): string => {
+ * @return GoogleSpreadsheetRow<Record<string, any>>[] 
+ */
+const filterShift = (rows: GoogleSpreadsheetRow[], userId: string, year: string, month: string): GoogleSpreadsheetRow<Record<string, any>>[] => {
   const filteredRows = rows.filter((r) => r.get('year') === year && r.get('month') === month);
 
   const shiftDates = []
@@ -23,6 +50,17 @@ export const loadShiftFromSheet = (rows: GoogleSpreadsheetRow[], userId: string,
       }
     }
   }
+  return shiftDates
+}
+/**
+ * enableShiftMessage
+ * 取得した結果をメッセージとして変換する
+ *
+ * 
+ * @param shiftDates GoogleSpreadsheetRow<Record<string, any>>[] 
+ * @return string 参加予定日を含めたメッセージ
+ */
+const enableShiftMessage = (shiftDates: GoogleSpreadsheetRow<Record<string, any>>[]): string => {
   if (shiftDates.length === 0) {
     return '指定した月の参加予定日は、ありません。'
   }
