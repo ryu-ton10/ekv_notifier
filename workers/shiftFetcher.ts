@@ -56,10 +56,12 @@ const filterShift = (rows: GoogleSpreadsheetRow[], userId: string, year: string,
  */
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 const enableShiftMessage = (shiftDates: GoogleSpreadsheetRow<Record<string, any>>[]): string => {
-  if (shiftDates.length === 0) {
-    return '指定した月の参加予定日は、ありません。'
-  }
   let message = "=====\n"
+  if (shiftDates.length === 0) {
+    message = `${message}指定した月の参加予定日は、ありません。`
+    message = `${message}=====`
+    return message
+  }
   for (const date of shiftDates) {
     message = `${message}${date.get('year')}年${date.get('month')}月${date.get('day')}日\n`
   }
