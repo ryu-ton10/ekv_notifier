@@ -11,19 +11,14 @@ import 'dotenv/config'
  * @param userId string | null
  * @return string 参加予定日を含めたメッセージ
  */
-export const fetchShift = async (year: string | null, month: string | null, userId: string) => {
+export const fetchShift = async (year: string, month: string, userId: string): Promise<string> => {
   const memberListSheetId = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
+  let message = ''
   await fetchRowsFromSheet(Number(memberListSheetId)).then(rows => {
-    if (!year || !month) {
-      // 年月を入力しなかった場合は、現在日時のシフトを返却する
-      const currentDate = new Date(Date.now());
-      year = String(currentDate.getFullYear());
-      // NOTE: Date から生成される月は 0 からのスタートであるため +1 している
-      month = String(Number(currentDate.getMonth()) + 1);
-    }
     const shiftDates = filterShift(rows, userId, year, month)
-    return enableShiftMessage(shiftDates)
+    message = enableShiftMessage(shiftDates)
   })
+  return message
 }
 
 /**

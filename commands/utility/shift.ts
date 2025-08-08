@@ -13,11 +13,18 @@ export const data = new SlashCommandBuilder()
       .setDescription('月'));
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-  const year = await interaction.options.getString('year')
-  let month = await interaction.options.getString('month')
+  let year = interaction.options.getString('year')
+  let month = interaction.options.getString('month')
   // NOTE: 04 などの文字が入力された場合は先頭の 0 を削除する
   if (month?.startsWith('0')) {
     month = month.slice(1)
+  }
+  if (!year || !month) {
+    // 年月を入力しなかった場合は、現在日時のシフトを返却する
+    const currentDate = new Date(Date.now());
+    year = String(currentDate.getFullYear());
+    // NOTE: Date から生成される月は 0 からのスタートであるため +1 している
+    month = String(Number(currentDate.getMonth()) + 1);
   }
 
   const message = await fetchShift(year, month, interaction.user.id)
