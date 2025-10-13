@@ -1,9 +1,9 @@
-import { loadMembersFromSheet } from "./workers/memberFetcher"
-import type { MembersAndRule } from "./workers/memberFetcher"
-import type { VideoUrl } from "./workers/streamFetcher";
-import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage, sendMessage } from "./workers/messageWorker";
-import { loadCommands, setupCommands } from "./workers/commandWorker";
-import { fetchStreams } from "./workers/streamFetcher";
+import { loadMembersFromSheet } from "./workers/memberFetcher.ts"
+import type { MembersAndRule } from "./workers/memberFetcher.ts"
+import type { VideoUrl } from "./workers/streamFetcher.ts";
+import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage, sendMessage } from "./workers/messageWorker.ts";
+import { loadCommands, setupCommands } from "./workers/commandWorker.ts";
+import { fetchStreams } from "./workers/streamFetcher.ts";
 import type { CommandInteraction } from "discord.js";
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { CronJob } from 'cron'
@@ -35,6 +35,7 @@ const sendNoticeMessage = () => {
     let message = await yieldNoticeMessage(membersAndRule);
     yieldMemberListMessage(membersAndRule.members).then(async (m: string) => {
       message = `${message}\n${m}`;
+      console.log(message)
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
       // TODO: 環境変数を boolean 型にする
       if (process.env.IS_PRODUCTION === 'true') {

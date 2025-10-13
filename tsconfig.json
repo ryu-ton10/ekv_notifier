@@ -29,7 +29,9 @@
     "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./@types", "node_modules/@types"],
 
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
   },
   "ts-node": {
     "esm": true,

@@ -1,5 +1,5 @@
 import type { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { fetchRowsFromSheet } from "./spreadsheetWorker";
+import { fetchRowsFromSheet } from "./spreadsheetWorker.ts";
 import 'dotenv/config'
 
 /**
