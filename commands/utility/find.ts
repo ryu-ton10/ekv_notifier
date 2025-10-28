@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import { SlashCommandBuilder, Guild } from 'discord.js'
+import { SlashCommandBuilder } from 'discord.js'
 import 'dotenv/config'
 
 export const data = new SlashCommandBuilder()
@@ -12,5 +12,6 @@ export const data = new SlashCommandBuilder()
   )
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.reply('hoge')
+  const member = interaction.options.getString('target');
+  console.log(member);
 }
