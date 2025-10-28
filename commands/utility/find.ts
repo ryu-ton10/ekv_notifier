@@ -1,8 +1,16 @@
 import type { ChatInputCommandInteraction } from "discord.js";
+import { SlashCommandBuilder, Guild } from 'discord.js'
+import 'dotenv/config'
+
+export const data = new SlashCommandBuilder()
+  .setName('shift')
+  .setDescription('ユーザの URL を取得します')
+  .addUserOption(option =>
+    option.setName('target')
+      .setDescription('メンバーを選択してください')
+      .setRequired(true)
+  )
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-  const members = await interaction.guild?.members.fetch();
-  console.log(members);
-
   await interaction.reply('hoge')
 }
