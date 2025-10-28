@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { SlashCommandBuilder } from 'discord.js'
-import { fetchShift } from './../../workers/shiftFetcher.ts';
+import { fetchShift } from './../workers/shiftFetcher.ts';
 
 export const data = new SlashCommandBuilder()
   .setName('shift')
