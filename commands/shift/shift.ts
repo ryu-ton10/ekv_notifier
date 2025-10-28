@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import { SlashCommandBuilder } from 'discord.js'
+import { SlashCommandBuilder, InteractionContextType } from 'discord.js'
 import { fetchShift } from '../../workers/shiftFetcher.ts';
 
 export const data = new SlashCommandBuilder()
@@ -10,7 +10,8 @@ export const data = new SlashCommandBuilder()
       .setDescription('年'))
   .addStringOption(option =>
     option.setName('month')
-      .setDescription('月'));
+      .setDescription('月'))
+  .setContexts(InteractionContextType.Guild);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
   let year = interaction.options.getString('year')

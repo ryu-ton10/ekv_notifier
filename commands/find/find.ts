@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import { SlashCommandBuilder } from 'discord.js'
+import { SlashCommandBuilder, InteractionContextType } from 'discord.js'
 import 'dotenv/config'
 
 export const data = new SlashCommandBuilder()
@@ -10,6 +10,7 @@ export const data = new SlashCommandBuilder()
       .setDescription('メンバーを選択してください')
       .setRequired(true)
   )
+  .setContexts(InteractionContextType.Guild);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
   const member = interaction.options.getString('target');
