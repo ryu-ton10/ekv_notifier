@@ -3,7 +3,7 @@ import { SlashCommandBuilder, Guild } from 'discord.js'
 import 'dotenv/config'
 
 export const data = new SlashCommandBuilder()
-  .setName('shift')
+  .setName('find')
   .setDescription('ユーザの URL を取得します')
   .addUserOption(option =>
     option.setName('target')
