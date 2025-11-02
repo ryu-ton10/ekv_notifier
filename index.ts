@@ -2,9 +2,10 @@ import { loadMembersFromSheet } from "./workers/memberFetcher.ts"
 import type { MembersAndRule } from "./workers/memberFetcher.ts"
 import type { VideoUrl } from "./workers/streamFetcher.ts";
 import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage, sendMessage } from "./workers/messageWorker.ts";
+import { loadCommands, setupCommands } from "./workers/commandWorker.ts";
 import { fetchStreams } from "./workers/streamFetcher.ts";
 import type { CommandInteraction } from "discord.js";
-import { Client, Collection, GatewayIntentBits } from 'discord.js'
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { CronJob } from 'cron'
 import 'dotenv/config'
 
@@ -13,19 +14,19 @@ const client = new Client(
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.MessageContent,
     ]
   }
 );
 client.commands = new Collection<string, { interaction: (interaction: CommandInteraction) => Promise<void>; execute(interaction: CommandInteraction): () => void; }>();
 
-//// スラッシュコマンドを利用するための準備を行う
-//loadCommands(client)
-//
-//// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
-//client.on(Events.InteractionCreate, async (interaction: any) => {
-//  setupCommands(interaction, client)
-//})
+// スラッシュコマンドを利用するための準備を行う
+loadCommands(client)
+
+// biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
+client.on(Events.InteractionCreate, async (interaction: any) => {
+  setupCommands(interaction, client)
+})
 
 const sendNoticeMessage = () => {
   loadMembersFromSheet().then(async (membersAndRule: MembersAndRule) => {
