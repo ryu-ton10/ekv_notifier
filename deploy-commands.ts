@@ -40,7 +40,7 @@ const rest = new REST().setToken(token);
 		const clientId = process.env.CLIENT_ID ?? ''
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		const data: any = await rest.put(
-			Routes.applicationCommands(clientId),
+			Routes.applicationGuildCommands(clientId, process.env.GUILD_ID ?? ''),
 			{ body: commands },
 		);
 
