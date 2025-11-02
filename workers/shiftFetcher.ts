@@ -58,7 +58,7 @@ const filterShift = (rows: GoogleSpreadsheetRow[], userId: string, year: string,
 const enableShiftMessage = (shiftDates: GoogleSpreadsheetRow<Record<string, any>>[]): string => {
   let message = "=====\n"
   if (shiftDates.length === 0) {
-    message = `${message}指定した月の参加予定日は、ありません。`
+    message = `${message}指定した月の参加予定日は、ありません。\n`
     message = `${message}=====`
     return message
   }

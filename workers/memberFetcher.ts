@@ -83,9 +83,9 @@ export const fetchGameMaster = async (): Promise<GameMaster> => {
 }
 
 export const fetchMember = async (memberId: string): Promise<string> => {
-  const memberListSheetId = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
+  const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
   let message = ''
-  await fetchRowsFromSheet(Number(memberListSheetId)).then(rows => {
+  await fetchRowsFromSheet(Number(memberMasterSheetId)).then(rows => {
     rows.filter((r) => {
       if (r.get('discordId') === memberId) {
         message = `【${r.get('name')}】\n<${r.get('twitter')}>\n<${r.get('youtube')}>\n`;
