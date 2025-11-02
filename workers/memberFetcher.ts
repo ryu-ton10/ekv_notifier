@@ -81,3 +81,19 @@ export const fetchGameMaster = async (): Promise<GameMaster> => {
   gm.channelId = rows[0].get('channelId');
   return gm;
 }
+
+export const fetchMember = async (memberId: string): Promise<string> => {
+  const memberListSheetId = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
+  let message = ''
+  await fetchRowsFromSheet(Number(memberListSheetId)).then(rows => {
+    rows.filter((r) => {
+      if (r.get('discordId') === memberId) {
+        message = `【${r.get('name')}】\n<${r.get('twitter')}>\n<${r.get('youtube')}>\n`;
+      }
+    })
+  })
+  if (message === '') {
+    message = '該当するメンバーが見つかりませんでした。';
+  }
+  return message;
+}
