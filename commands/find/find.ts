@@ -14,10 +14,13 @@ export const data = new SlashCommandBuilder()
   .setContexts(InteractionContextType.Guild);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+  await console.log('x');
   const member = interaction.options.getUser('target');
+  await console.log(member);
   if (!member) {
     await interaction.reply('メンバーが見つかりませんでした。');
     return;
   }
+  await console.log('y');
   await interaction.reply(`${fetchMember(member.id)}`);
 }
