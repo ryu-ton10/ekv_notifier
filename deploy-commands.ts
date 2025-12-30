@@ -1,4 +1,5 @@
-import { REST, Routes } from 'discord.js';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,7 +30,7 @@ for (const folder of commandFolders) {
 
 // Construct and prepare an instance of the REST module
 const token = process.env.TOKEN ?? ''
-const rest = new REST().setToken(token);
+const rest = new REST({ version: '10' }).setToken(token);
 
 // and deploy your commands!
 (async () => {

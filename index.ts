@@ -4,6 +4,8 @@ import type { VideoUrl } from "./workers/streamFetcher.ts";
 import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage, sendMessage } from "./workers/messageWorker.ts";
 import { loadCommands, setupCommands } from "./workers/commandWorker.ts";
 import { fetchStreams } from "./workers/streamFetcher.ts";
+import { isRecording } from './workers/recordManager.ts';
+import { recognizeImage } from "./workers/chatgptCommunicator.ts";
 import type { CommandInteraction } from "discord.js";
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { CronJob } from 'cron'
@@ -141,6 +143,36 @@ client.on('messageCreate', (message: any) => {
     satUrlFetchJob.start();
     client.send("started cron jobs");
   }
+
+  const gid = message.guildId
+  if (!gid) return
+
+  // 画像判定（helper を別ファイルにしても OK）
+  const isImageAttachment = (att: any) => {
+    if (!att) return false
+    if (att.contentType && att.contentType.startsWith('image/')) return true
+    const name = att.name ?? att.url ?? ''
+    return /\.(jpe?g|png|gif|webp|bmp|tiff|JPG)$/i.test(name)
+  }
+  const images = message.attachments?.filter?.((a: any) => isImageAttachment(a)) ?? []
+  if (images.size === 0) return
+
+  // check guild record state
+  if (!isRecording(gid)) return
+
+  // ここで画像を解析して順位を記録する処理を呼ぶ
+  const imgAttachment = images.first();
+  const imageUrl = imgAttachment?.url ?? imgAttachment?.proxyURL ?? imgAttachment?.attachment ?? null;
+  if (!imageUrl) {
+    console.error('No image URL found in the attachment for message id', message.id);
+    return;
+  }
+
+  recognizeImage(imageUrl).then((resultText: string) => {
+    console.log('recognized text:', resultText)
+  }).catch((err: any) => {
+    console.error('error recognizing image:', err)
+  });
 });
 
 client.on('ready', () => {
