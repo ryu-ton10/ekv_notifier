@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { SlashCommandBuilder, InteractionContextType } from 'discord.js'
 import { startRecording, stopRecording, isRecording } from './../../workers/recordManager.ts';
+import { getResults, clearResults } from './../../store/raceResult.ts';
 
 export const data = new SlashCommandBuilder()
   .setName('record')
@@ -33,8 +34,17 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
   } else if (option === 'stop') {
 
-    stopRecording(gid)
+    const results = getResults(gid);
+    if (!results || results.length === 0) {
+      stopRecording(gid);
+      await interaction.reply('記録された結果がありませんでした。');
+      return;
+    }
 
-    await interaction.reply('順位の記録を停止しました。')
+    // clear stored results for this guild
+    clearResults(gid);
+    stopRecording(gid);
+
+    await interaction.reply(`記録を終了しました。\n最終結果:\n${results.map(r => `${r.name} [jp] ${r.score}`).join('\n')}`);
   }
 }

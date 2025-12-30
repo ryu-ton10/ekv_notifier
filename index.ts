@@ -1,11 +1,12 @@
 import { loadMembersFromSheet } from "./workers/memberFetcher.ts"
 import type { MembersAndRule } from "./workers/memberFetcher.ts"
 import type { VideoUrl } from "./workers/streamFetcher.ts";
-import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage, sendMessage } from "./workers/messageWorker.ts";
+import { yieldNoticeMessage, yieldMemberListMessage, yieldStreamListMessage, sendMessage, raceResultText } from "./workers/messageWorker.ts";
 import { loadCommands, setupCommands } from "./workers/commandWorker.ts";
 import { fetchStreams } from "./workers/streamFetcher.ts";
 import { isRecording } from './workers/recordManager.ts';
 import { recognizeImage } from "./workers/chatgptCommunicator.ts";
+import { addResultsFromResponse } from "./store/raceResult.ts";
 import type { CommandInteraction } from "discord.js";
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { CronJob } from 'cron'
@@ -170,6 +171,25 @@ client.on('messageCreate', (message: any) => {
 
   recognizeImage(imageUrl).then((resultText: string) => {
     console.log('recognized text:', resultText)
+
+    // try to parse a JSON array like [{"rank":1,"name":"Alice"}, ...]
+    try {
+      resultText = resultText.replace(/`/g, "");
+      resultText = resultText.replace(/json/g, "");
+      const parsed = JSON.parse(resultText);
+      if (Array.isArray(parsed)) {
+        // add to per-guild store
+        addResultsFromResponse(gid, parsed as any[]);
+        const raceSummary = raceResultText(parsed as []);
+        sendMessage(message.channelId, `画像から以下の順位を記録しました:\n${raceSummary}`, client);
+        console.log('stored parsed results for guild', gid, 'count', (parsed as any[]).length);
+      } else {
+        console.warn('recognized text is not an array; skipping store');
+      }
+    } catch (e) {
+      console.error('Failed to parse OCR result as JSON; skipping store:', e);
+    }
+
   }).catch((err: any) => {
     console.error('error recognizing image:', err)
   });

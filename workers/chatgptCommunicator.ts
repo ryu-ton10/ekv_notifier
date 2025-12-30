@@ -27,7 +27,7 @@ export const recognizeImage = async (imageSource: string | any): Promise<string>
         {
           role: "user",
           content: [
-            { type: "text", text: "以下の画像から文字を抽出し、順位とプレイヤー名を json 形式で返してください。" },
+            { type: "text", text: "以下の画像から文字を抽出し、順位とプレイヤー名を rank と name というキーを持つ json 形式で返してください。" },
             { type: "image_url", image_url: { url: normalizedUrl } },
           ],
         },

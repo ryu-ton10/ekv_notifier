@@ -72,6 +72,14 @@ export const yieldStreamListMessage = (urls: VideoUrl[]): string => {
   return text
 }
 
+export const raceResultText = (result: []): string => {
+  let resultText = ''
+  result.map((r: any) => {
+    resultText = `${resultText}\n${r.rank} 位 ${r.name}`
+  })
+  return resultText
+}
+
 /**
  * sendMessage
  * 指定したチャンネルにメッセージを送信する
