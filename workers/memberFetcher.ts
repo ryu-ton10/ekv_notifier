@@ -77,7 +77,7 @@ export const fetchGameMaster = async (): Promise<GameMaster> => {
   gm.name = rows[0].get('name');
   gm.discordId = rows[0].get('discordId');
   gm.twitter = rows[0].get('twitter');
-  gm.youtube = rows[0].get('youtube');
+  gm.youtube = `https://www.youtube.com/channel/${rows[0].get('channelId')}`;
   gm.channelId = rows[0].get('channelId');
   return gm;
 }
@@ -88,7 +88,7 @@ export const fetchMember = async (memberId: string): Promise<string> => {
   await fetchRowsFromSheet(Number(memberMasterSheetId)).then(rows => {
     rows.filter((r) => {
       if (r.get('discordId') === memberId) {
-        message = `【${r.get('name')}】\n<${r.get('twitter')}>\n<${r.get('youtube')}>\n`;
+        message = `【${r.get('name')}】\n<${r.get('twitter')}>\n<https://www.youtube.com/channel/${r.get('channelId')}>\n`;
       }
     })
   })

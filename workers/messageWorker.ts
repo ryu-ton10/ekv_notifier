@@ -42,7 +42,7 @@ export const yieldMemberListMessage = async (members: string[]): Promise<string>
   const memberRows = await fetchRowsFromSheet(Number(memberMasterSheetId));
   const gm = await fetchGameMaster();
   let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
-  text = `${text}【${gm.name}】（主催）\n<${gm.twitter}>\n<${gm.youtube}>\n\n`;
+  text = `${text}【${gm.name}】（主催）\n<${gm.twitter}>\n<https://www.youtube.com/channel/${gm.channelId}>\n\n`;
   for (const r of memberRows) {
     for (const m of members) {
       if (r.get('discordId') === m) {
