@@ -46,7 +46,7 @@ export const yieldMemberListMessage = async (members: string[]): Promise<string>
   for (const r of memberRows) {
     for (const m of members) {
       if (r.get('discordId') === m) {
-        text = `${text}【${r.get('name')}】\n<${r.get('twitter')}>\n<https://www.youtube.com/channel/${r.get('channelId')}>\n\n`;
+        text = `${text}【${r.get('name')}】\nX : <${r.get('twitter')}>\nYouTube : <https://www.youtube.com/channel/${r.get('channelId')}>\n\n`;
       }
     }
   }
