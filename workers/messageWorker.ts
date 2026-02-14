@@ -13,6 +13,7 @@ import { fetchGameMaster, fetchMember } from './memberFetcher.ts';
  */
 export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promise<string> => {
   let message = '';
+
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of membersAndRule.members) {
     // メンバーが 12 人以下のケースを考慮している
@@ -21,6 +22,7 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
     }
     message = `${message}<@${member}> `;
   }
+
   const gm = await fetchGameMaster();
   message = `${message}<@${gm.discordId}>`
 
@@ -63,20 +65,25 @@ export const yieldMemberListMessage = async (members: string[]): Promise<string>
  */
 export const yieldStreamListMessage = (urls: VideoUrl[]): string => {
   let text = ''
+
   text = `${text}----------------------------------\n`
   text = `${text}現時点で立てられている本日の EKV 配信枠をご案内します。\n\n`
+
   for (const u of urls) {
     text = `${text}【${u.name}】\n<${u.url}>\n\n`
   }
+
   text = `${text}----------------------------------`
   return text
 }
 
 export const raceResultText = (result: []): string => {
   let resultText = ''
+
   result.map((r: any) => {
     resultText = `${resultText}\n${r.rank} 位 ${r.name}`
   })
+
   return resultText
 }
 
