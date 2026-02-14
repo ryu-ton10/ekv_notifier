@@ -15,6 +15,14 @@ type GameMaster = {
   channelId: string;
 }
 
+type Member = {
+  name: string;
+  discordId: string;
+  twitter: string;
+  youtube: string;
+  channelId: string;
+}
+
 /**
  * loadMembersFromSheet
  * スプレッドシートから参加メンバーを取得する
@@ -79,21 +87,37 @@ export const fetchGameMaster = async (): Promise<GameMaster> => {
   gm.twitter = rows[0].get('twitter');
   gm.youtube = `https://www.youtube.com/channel/${rows[0].get('channelId')}`;
   gm.channelId = rows[0].get('channelId');
+
   return gm;
 }
 
-export const fetchMember = async (memberId: string): Promise<string> => {
+/**
+ * fetchMember
+ * ID を元にメンバーの情報を取得する
+ *
+ * @return Promise<Member>
+ */
+export const fetchMember = async (memberId: string): Promise<Member> => {
   const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
-  let message = ''
+  const member: Member = {
+    name: '',
+    discordId: '',
+    twitter: '',
+    youtube: '',
+    channelId: ''
+  };
+
   await fetchRowsFromSheet(Number(memberMasterSheetId)).then(rows => {
     rows.filter((r) => {
       if (r.get('discordId') === memberId) {
-        message = `【${r.get('name')}】\n<${r.get('twitter')}>\n<https://www.youtube.com/channel/${r.get('channelId')}>\n`;
+        member.name = r.get('name');
+        member.discordId = r.get('discordId');
+        member.twitter = r.get('twitter');
+        member.youtube = `https://www.youtube.com/channel/${r.get('channelId')}`;
+        member.channelId = r.get('channelId');
       }
     })
   })
-  if (message === '') {
-    message = '該当するメンバーが見つかりませんでした。';
-  }
-  return message;
+
+  return member;
 }

@@ -2,8 +2,7 @@ import type { BaseGuildTextChannel, Client } from 'discord.js';
 import type { MembersAndRule } from './memberFetcher.ts';
 import type { VideoUrl } from './streamFetcher.ts';
 import 'dotenv/config'
-import { fetchRowsFromSheet } from './spreadsheetWorker.ts';
-import { fetchGameMaster } from './memberFetcher.ts';
+import { fetchGameMaster, fetchMember } from './memberFetcher.ts';
 
 /**
  * yieldMessage
@@ -37,20 +36,18 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
  * @return string 実際に送信するメッセージ内容
  */
 export const yieldMemberListMessage = async (members: string[]): Promise<string> => {
-  const memberMasterSheetId = process.env.MEMBER_MASTER_WORKSHEET_ID ?? ''
-
-  const memberRows = await fetchRowsFromSheet(Number(memberMasterSheetId));
   const gm = await fetchGameMaster();
   let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
-  text = `${text}【${gm.name}】（主催）\nX : <${gm.twitter}>\nYouTube : <https://www.youtube.com/channel/${gm.channelId}>\n\n`;
+  text = `${text}【${gm.name}】（主催）\nX : <${gm.twitter}>\nYouTube : <${gm.youtube}>\n\n`;
 
-  // TODO: memberFetcher.ts の fetchMember と重複しているため、統一する
-  for (const r of memberRows) {
-    for (const m of members) {
-      if (r.get('discordId') === m) {
-        text = `${text}【${r.get('name')}】\nX : <${r.get('twitter')}>\nYouTube : <https://www.youtube.com/channel/${r.get('channelId')}>\n\n`;
-      }
+  for (const m of members) {
+    const member = await fetchMember(m);
+
+    if (member.name === '') {
+      continue;
     }
+
+    text = `${text}【${member.name}】\nX : <${member.twitter}>\nYouTube : <${member.youtube}>\n\n`;
   }
 
   text = `${text}----------------------------------`
