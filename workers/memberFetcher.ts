@@ -12,7 +12,7 @@ type GameMaster = {
   discordId: string;
   twitter: string;
   youtube: string;
-  channelId: string;
+  youtubeId: string;
 }
 
 type Member = {
@@ -20,7 +20,7 @@ type Member = {
   discordId: string;
   twitter: string;
   youtube: string;
-  channelId: string;
+  youtubeId: string;
 }
 
 /**
@@ -76,7 +76,7 @@ export const fetchGameMaster = async (): Promise<GameMaster> => {
     discordId: '',
     twitter: '',
     youtube: '',
-    channelId: ''
+    youtubeId: ''
   };
 
   const gameMasterSheetId = process.env.GAME_MASTER_WORKSHEET_ID ?? ''
@@ -85,8 +85,8 @@ export const fetchGameMaster = async (): Promise<GameMaster> => {
   gm.name = rows[0].get('name');
   gm.discordId = rows[0].get('discordId');
   gm.twitter = rows[0].get('twitter');
-  gm.youtube = `https://www.youtube.com/channel/${rows[0].get('channelId')}`;
-  gm.channelId = rows[0].get('channelId');
+  gm.youtube = `https://www.youtube.com/channel/${rows[0].get('youtubeId')}`;
+  gm.youtubeId = rows[0].get('youtubeId');
 
   return gm;
 }
@@ -104,7 +104,7 @@ export const fetchMember = async (memberId: string): Promise<Member> => {
     discordId: '',
     twitter: '',
     youtube: '',
-    channelId: ''
+    youtubeId: ''
   };
 
   await fetchRowsFromSheet(Number(memberMasterSheetId)).then(rows => {
@@ -113,8 +113,8 @@ export const fetchMember = async (memberId: string): Promise<Member> => {
         member.name = r.get('name');
         member.discordId = r.get('discordId');
         member.twitter = r.get('twitter');
-        member.youtube = `https://www.youtube.com/channel/${r.get('channelId')}`;
-        member.channelId = r.get('channelId');
+        member.youtube = `https://www.youtube.com/channel/${r.get('youtubeId')}`;
+        member.youtubeId = r.get('youtubeId');
       }
     })
   })
