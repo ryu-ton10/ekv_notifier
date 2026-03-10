@@ -40,7 +40,11 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
 export const yieldMemberListMessage = async (members: string[]): Promise<string> => {
   const gm = await fetchGameMaster();
   let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
-  text = `${text}【${gm.name}】（主催）\nX : <${gm.twitter}>\nYouTube : <${gm.youtube}>\n\n`;
+  if (!gm.twitch) {
+    text = `${text}【${gm.name}】（主催）\nX : <${gm.twitter}>\nYouTube : <${gm.youtube}>\n\n`;
+  } else {
+    text = `${text}【${gm.name}】（主催）\nX : <${gm.twitter}>\nYouTube : <${gm.youtube}>\nTwitch : <${gm.twitch}>\n\n`;
+  }
 
   for (const m of members) {
     const member = await fetchMember(m);
@@ -49,7 +53,12 @@ export const yieldMemberListMessage = async (members: string[]): Promise<string>
       continue;
     }
 
-    text = `${text}【${member.name}】\nX : <${member.twitter}>\nYouTube : <${member.youtube}>\n\n`;
+    if (!member.twitch) {
+      text = `${text}【${member.name}】\nX : <${member.twitter}>\nYouTube : <${member.youtube}>\n\n`;
+      continue;
+    }
+
+    text = `${text}【${member.name}】\nX : <${member.twitter}>\nYouTube : <${member.youtube}>\nTwitch : <${member.twitch}>\n\n`;
   }
 
   text = `${text}----------------------------------`
