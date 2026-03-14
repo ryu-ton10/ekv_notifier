@@ -1,4 +1,5 @@
 import { fetchGameMaster, fetchMember } from "./memberFetcher.ts"
+import type { Member, GameMaster } from './memberFetcher.ts'
 import 'dotenv/config'
 
 export type VideoUrl = {
@@ -13,16 +14,16 @@ export type VideoUrl = {
  * @param members string[] 参加メンバーの ID 一覧
  * @return VideoUrl[] 配信枠一覧
  */
-export const fetchStreams = async (members: string[]): Promise<VideoUrl[]> => {
+export const fetchStreams = async (members: Member[]): Promise<VideoUrl[]> => {
   const result: VideoUrl[] = []
 
   // 決め打ちで GM の配信枠を取得する
-  const gm = await fetchGameMaster();
+  const gm: GameMaster = await fetchGameMaster();
   result.push(await callApi(gm.name, gm.youtubeId, 'upcoming'))
 
   // 当日参加するメンバーの配信枠を取得する
   for (const m of members) {
-    const member = await fetchMember(m);
+    const member: Member = await fetchMember(m.discordId);
 
     if (member.youtubeId === '') {
       continue;
@@ -49,6 +50,7 @@ export const callApi = async (name: string, youtubeId: string, eventType: string
 
   try {
     const response = await fetch(url)
+    console.log(response)
     if (!response.ok) {
       throw new Error(`Response Status: ${response.status}`)
     }

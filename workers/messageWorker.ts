@@ -1,5 +1,5 @@
 import type { BaseGuildTextChannel, Client } from 'discord.js';
-import type { MembersAndRule } from './memberFetcher.ts';
+import type { Member, MembersAndRule } from './memberFetcher.ts';
 import type { VideoUrl } from './streamFetcher.ts';
 import 'dotenv/config'
 import { fetchGameMaster, fetchMember } from './memberFetcher.ts';
@@ -17,7 +17,7 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of membersAndRule.members) {
     // メンバーが 12 人以下のケースを考慮している
-    if (member === "#N/A") {
+    if (member.name === "#N/A") {
       continue;
     }
     message = `${message}<@${member}> `;
@@ -37,7 +37,7 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-export const yieldMemberListMessage = async (members: string[]): Promise<string> => {
+export const yieldMemberListMessage = async (members: Member[]): Promise<string> => {
   const gm = await fetchGameMaster();
   let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
   if (!gm.twitch) {
@@ -47,7 +47,7 @@ export const yieldMemberListMessage = async (members: string[]): Promise<string>
   }
 
   for (const m of members) {
-    const member = await fetchMember(m);
+    const member = await fetchMember(m.discordId);
 
     if (member.name === '') {
       continue;

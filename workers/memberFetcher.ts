@@ -3,11 +3,11 @@ import 'dotenv/config'
 import { fetchRowsFromSheet } from './spreadsheetWorker.ts';
 
 export type MembersAndRule = {
-  members: string[];
+  members: Member[];
   rule: string;
 }
 
-type GameMaster = {
+export type GameMaster = {
   name: string;
   discordId: string;
   twitter: string;
@@ -16,7 +16,7 @@ type GameMaster = {
   twitch: string;
 }
 
-type Member = {
+export type Member = {
   name: string;
   discordId: string;
   twitter: string;
@@ -33,7 +33,7 @@ type Member = {
 */
 export const loadMembersFromSheet = async (): Promise<MembersAndRule> => {
   const result = {
-    members: [] as string[],
+    members: [] as Member[],
     rule: ''
   }
   const memberListSheetId: string = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
