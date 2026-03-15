@@ -46,11 +46,10 @@ export const fetchStreams = async (members: Member[]): Promise<VideoUrl[]> => {
  * @return VideoUrl 配信枠情報
  */
 export const callApi = async (name: string, youtubeId: string, eventType: string): Promise<VideoUrl> => {
-  const url = `https://content-youtube.googleapis.com/youtube/v3/search?q=EKV&youtubeId=${youtubeId}&maxResults=1&part=snippet&type=video&eventType=${eventType}&key=${process.env.YOUTUBE_API_KEY}`
+  const url = `https://content-youtube.googleapis.com/youtube/v3/search?q=EKV&channelId=${youtubeId}&maxResults=1&part=snippet&type=video&eventType=${eventType}&key=${process.env.YOUTUBE_API_KEY}`
 
   try {
     const response = await fetch(url)
-    console.log(response)
     if (!response.ok) {
       throw new Error(`Response Status: ${response.status}`)
     }
