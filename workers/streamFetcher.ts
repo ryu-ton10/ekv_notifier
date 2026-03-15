@@ -14,7 +14,7 @@ export type VideoUrl = {
  * @param members string[] 参加メンバーの ID 一覧
  * @return VideoUrl[] 配信枠一覧
  */
-export const fetchStreams = async (members: Member[]): Promise<VideoUrl[]> => {
+export const fetchStreams = async (members: string[]): Promise<VideoUrl[]> => {
   const result: VideoUrl[] = []
 
   // 決め打ちで GM の配信枠を取得する
@@ -23,7 +23,7 @@ export const fetchStreams = async (members: Member[]): Promise<VideoUrl[]> => {
 
   // 当日参加するメンバーの配信枠を取得する
   for (const m of members) {
-    const member: Member = await fetchMember(m.discordId);
+    const member: Member = await fetchMember(m);
 
     if (member.youtubeId === '') {
       continue;

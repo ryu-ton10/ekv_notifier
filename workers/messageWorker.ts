@@ -17,7 +17,7 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
   // 各メンバーへのメンションメッセージを組み立てる
   for (const member of membersAndRule.members) {
     // メンバーが 12 人以下のケースを考慮している
-    if (member.name === "#N/A") {
+    if (member === "#N/A") {
       continue;
     }
     message = `${message}<@${member}> `;
@@ -37,7 +37,7 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
  * @param members string
  * @return string 実際に送信するメッセージ内容
  */
-export const yieldMemberListMessage = async (members: Member[]): Promise<string> => {
+export const yieldMemberListMessage = async (members: string[]): Promise<string> => {
   const gm = await fetchGameMaster();
   let text = "\n以下は本日の参加者のリンク一覧です。概要欄などにご活用ください。\n----------------------------------\n参加者一覧（順不同・敬称略）\n\n";
   if (!gm.twitch) {
@@ -47,7 +47,7 @@ export const yieldMemberListMessage = async (members: Member[]): Promise<string>
   }
 
   for (const m of members) {
-    const member = await fetchMember(m.discordId);
+    const member = await fetchMember(m);
 
     if (member.name === '') {
       continue;
