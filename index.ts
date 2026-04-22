@@ -134,7 +134,7 @@ client.on('messageCreate', (message: any) => {
   if (message.content === "send notification now") {
     sendNoticeMessage();
   }
-  if (message.content === "send strem urls now") {
+  if (message.content === "send stream urls now") {
     fetchStreamUrls();
   }
   if (message.content === "restart bot") {
