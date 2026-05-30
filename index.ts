@@ -40,13 +40,21 @@ const sendNoticeMessage = () => {
     yieldMemberListMessage(membersAndRule.members).then(async (m: string) => {
       message = `${message}\n${m}`;
       console.log(message)
+
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
       // TODO: 環境変数を boolean 型にする
-      if (process.env.IS_PRODUCTION === 'true') {
+      if (process.env.IS_PRODUCTION !== 'true') { return; }
+
+      if (membersAndRule.category === 'EKV') {
         const channelId = process.env.CHAT_CHANNEL_ID ?? ''
         sendMessage(channelId, message, client);
-        console.log('sent a schedule notification message');
+        console.log('sent a schedule notification message to EKV');
+      } else if (membersAndRule.category === 'EMSW') {
+        const channelId = process.env.CHAT_CHANNEL_ID ?? ''
+        sendMessage(channelId, message, client);
+        console.log('sent a schedule notification message to EMSW');
       }
+
       console.log('finished all notification process');
     })
   })
@@ -59,10 +67,17 @@ const fetchStreamUrls = () => {
     }
     fetchStreams(membersAndRule.members).then((urls: VideoUrl[]) => {
       const message = yieldStreamListMessage(urls)
+
       // デプロイ先の本番環境でのみメッセージが送信される仕組み
       // TODO: 環境変数を boolean 型にする
-      if (process.env.IS_PRODUCTION === 'true') {
-        const channelId = process.env.STREAM_CHANNEL_ID ?? ''
+      if (process.env.IS_PRODUCTION !== 'true') { return; }
+
+      if (membersAndRule.category === 'EKV') {
+        const channelId = process.env.EKV_STREAM_CHANNEL_ID ?? ''
+        sendMessage(channelId, message, client);
+        console.log('sent a stream urls');
+      } else if (membersAndRule.category === 'EMSW') {
+        const channelId = process.env.EMSW_STREAM_CHANNEL_ID ?? ''
         sendMessage(channelId, message, client);
         console.log('sent a stream urls');
       }

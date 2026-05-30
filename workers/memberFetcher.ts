@@ -5,6 +5,7 @@ import { fetchRowsFromSheet } from './spreadsheetWorker.ts';
 export type MembersAndRule = {
   members: string[];
   rule: string;
+  category: string;
 }
 
 export type GameMaster = {
@@ -34,7 +35,8 @@ export type Member = {
 export const loadMembersFromSheet = async (): Promise<MembersAndRule> => {
   const result = {
     members: [] as string[],
-    rule: ''
+    rule: '',
+    category: '',
   }
   const memberListSheetId: string = process.env.MEMBER_LIST_WORKSHEET_ID ?? ''
 
@@ -63,6 +65,7 @@ export const loadMembersFromSheet = async (): Promise<MembersAndRule> => {
   }
 
   result.rule = row.get('rule');
+  result.category = row.get('category');
   return result;
 }
 
@@ -115,9 +118,16 @@ export const fetchMember = async (memberId: string): Promise<Member> => {
   await fetchRowsFromSheet(Number(memberMasterSheetId)).then(rows => {
     rows.filter((r) => {
       if (r.get('discordId') === memberId) {
+
+        /* YouTube の概要欄での表示用に Twitter の URL を変換 */
+        let twitter = r.get('twitter');
+        if (twitter.includes('x.com')) {
+          twitter = twitter.replace('x.com', 'twitter.com');
+        }
+
         member.name = r.get('name');
         member.discordId = r.get('discordId');
-        member.twitter = r.get('twitter');
+        member.twitter = twitter;
         member.youtube = `https://www.youtube.com/channel/${r.get('youtubeId')}`;
         member.youtubeId = r.get('youtubeId');
         member.twitch = r.get('twitch');

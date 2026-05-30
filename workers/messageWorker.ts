@@ -26,7 +26,7 @@ export const yieldNoticeMessage = async (membersAndRule: MembersAndRule): Promis
   const gm = await fetchGameMaster();
   message = `${message}<@${gm.discordId}>`
 
-  message = `${message}\n本日は EKV マリカです！参加者とルールを確認しましょう。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠については、配信開始 30 分前に私が自動的に取得します。`
+  message = `${message}\n本日は ${membersAndRule.category} マリカです！参加者とルールを確認しましょう。\n本日のルールは <#${membersAndRule.rule}> です！\n配信枠については、配信開始 30 分前に自動的に取得します。`
   return message;
 }
 
