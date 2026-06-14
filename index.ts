@@ -46,11 +46,11 @@ const sendNoticeMessage = () => {
       if (process.env.IS_PRODUCTION !== 'true') { return; }
 
       if (membersAndRule.category === 'EKV') {
-        const channelId = process.env.CHAT_CHANNEL_ID ?? ''
+        const channelId = process.env.EKV_CHAT_CHANNEL_ID ?? ''
         sendMessage(channelId, message, client);
         console.log('sent a schedule notification message to EKV');
       } else if (membersAndRule.category === 'EMSW') {
-        const channelId = process.env.CHAT_CHANNEL_ID ?? ''
+        const channelId = process.env.EMSW_CHAT_CHANNEL_ID ?? ''
         sendMessage(channelId, message, client);
         console.log('sent a schedule notification message to EMSW');
       }
