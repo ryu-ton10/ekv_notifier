@@ -110,6 +110,18 @@ const satNoticeJob = CronJob.from({
   start: false,
   timeZone: 'Asia/Tokyo',
 })
+const sunNoticeJob = CronJob.from({
+  cronTime: '0 0 12 * * 0',
+  onTick: () => {
+    console.log('start to send a notice message');
+    sendNoticeMessage();
+  },
+  onComplete: () => {
+    console.log('completed to send a notice message')
+  },
+  start: false,
+  timeZone: 'Asia/Tokyo',
+})
 const wedUrlFetchJob = CronJob.from({
   cronTime: '0 30 20 * * 3',
   onTick: () => {
@@ -134,6 +146,18 @@ const satUrlFetchJob = CronJob.from({
   start: false,
   timeZone: 'Asia/Tokyo',
 })
+const sunUrlFetchJob = CronJob.from({
+  cronTime: '0 0 20 * * 0',
+  onTick: () => {
+    console.log('start to send a stream urls');
+    fetchStreamUrls();
+  },
+  onComplete: () => {
+    console.log('completed to send a stream urls');
+  },
+  start: false,
+  timeZone: 'Asia/Tokyo',
+})
 
 // biome-ignore lint/suspicious/noExplicitAny: 代替する型が見つからないため
 client.on('messageCreate', (message: any) => {
@@ -142,8 +166,10 @@ client.on('messageCreate', (message: any) => {
   if (message.content === "stop bot") {
     wedNoticeJob.stop();
     satNoticeJob.stop();
+    sunNoticeJob.stop();
     wedUrlFetchJob.stop();
     satUrlFetchJob.stop();
+    sunUrlFetchJob.stop();
     client.send("stopped cron jobs");
   }
   if (message.content === "send notification now") {
@@ -155,8 +181,10 @@ client.on('messageCreate', (message: any) => {
   if (message.content === "restart bot") {
     wedNoticeJob.start();
     satNoticeJob.start();
+    sunNoticeJob.start();
     wedUrlFetchJob.start();
     satUrlFetchJob.start();
+    sunUrlFetchJob.start();
     client.send("started cron jobs");
   }
 
@@ -214,8 +242,10 @@ client.on('ready', () => {
   console.log('ready to send');
   wedNoticeJob.start();
   satNoticeJob.start();
+  sunNoticeJob.start();
   wedUrlFetchJob.start();
   satUrlFetchJob.start();
+  sunUrlFetchJob.start();
   console.log('cron job start');
 });
 
