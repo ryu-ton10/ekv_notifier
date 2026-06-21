@@ -60,7 +60,7 @@ export const loadMembersFromSheet = async (): Promise<MembersAndRule> => {
     return result;
   }
 
-  for ( let i = 0; i < 12; i++ ) {
+  for ( let i = 0; i < 24; i++ ) {
     result.members.push(row.get(String(i)))
   }
 
