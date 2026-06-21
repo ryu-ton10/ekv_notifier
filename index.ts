@@ -47,11 +47,12 @@ const sendNoticeMessage = () => {
 
       if (membersAndRule.category === 'EKV') {
         const channelId = process.env.EKV_CHAT_CHANNEL_ID ?? ''
-        sendMessage(channelId, message, client);
+        await sendMessage(channelId, message, client);
         console.log('sent a schedule notification message to EKV');
       } else if (membersAndRule.category === 'EMSW') {
+        console.log('start to send a message')
         const channelId = process.env.EMSW_CHAT_CHANNEL_ID ?? ''
-        sendMessage(channelId, message, client);
+        await sendMessage(channelId, message, client);
         console.log('sent a schedule notification message to EMSW');
       }
 
@@ -246,6 +247,7 @@ client.on('ready', () => {
   wedUrlFetchJob.start();
   satUrlFetchJob.start();
   sunUrlFetchJob.start();
+  sendNoticeMessage()
   console.log('cron job start');
 });
 

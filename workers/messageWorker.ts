@@ -96,6 +96,32 @@ export const raceResultText = (result: []): string => {
   return resultText
 }
 
+const DISCORD_MAX_LENGTH = 2000;
+
+const splitMessage = (message: string): string[] => {
+  if (message.length <= DISCORD_MAX_LENGTH ) return [message];
+
+  const chunks: string[] = [];
+  let remaining = message;
+
+  while (remaining.length > 0) {
+    if (remaining.length <= DISCORD_MAX_LENGTH) {
+      chunks.push(remaining);
+      break;
+    }
+
+    let splitIndex = remaining.lastIndexOf("\n", DISCORD_MAX_LENGTH);
+    if (splitIndex === -1 || splitIndex === 0) {
+      splitIndex = DISCORD_MAX_LENGTH;
+    }
+
+    chunks.push(remaining.slice(0, splitIndex));
+    remaining = remaining.slice(splitIndex).replace(/^\n/, '');
+  }
+
+  return chunks;
+}
+
 /**
  * sendMessage
  * 指定したチャンネルにメッセージを送信する
@@ -103,8 +129,13 @@ export const raceResultText = (result: []): string => {
  * @param message string
  * @param client Client
  */
-export const sendMessage = (channelId: string, message: string, client: Client) => {
+export const sendMessage = async (channelId: string, message: string, client: Client) => {
   const channel = client.channels.cache.get(channelId) as BaseGuildTextChannel;
   if (!channel) return
-  channel.send(message);
+  console.log("ready to send a message")
+
+  const chunks = splitMessage(message);
+  for (const chunk of chunks) {
+    await channel.send(chunk);
+  }
 }
