@@ -247,7 +247,6 @@ client.on('ready', () => {
   wedUrlFetchJob.start();
   satUrlFetchJob.start();
   sunUrlFetchJob.start();
-  sendNoticeMessage()
   console.log('cron job start');
 });
 
